@@ -13,6 +13,6 @@ public class MoveCommand : Command
 
     public override void Execute()
     {
-        _actor.AddForce(_moveDirection);
+        _actor.velocity = _moveDirection;
     }
 }

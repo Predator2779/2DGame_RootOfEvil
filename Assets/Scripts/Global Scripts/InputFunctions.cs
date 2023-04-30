@@ -47,7 +47,7 @@ namespace InputData
 
         static public bool GetKeyE()
         {
-            return Input.GetKey(KeyCode.E);
+            return Input.GetKeyUp(KeyCode.E);
         }
     }
 }

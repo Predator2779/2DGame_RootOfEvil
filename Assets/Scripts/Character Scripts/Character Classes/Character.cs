@@ -5,7 +5,7 @@ using GlobalVariables;
 public class Character : MonoBehaviour
 {
     protected Rigidbody2D _rbody;
-    [SerializeField][Range(0, 60)] protected int _movementSpeed;
+    [SerializeField][Range(0, 10)] protected int _movementSpeed;
 
     private void Start()
     {
@@ -22,6 +22,16 @@ public class Character : MonoBehaviour
         float speed = _movementSpeed * GlobalConstants.CoefMovementSpeed;
 
         ExecuteCommand(new MoveCommand(_rbody, movementDirection * speed));
+    }
+
+    public void RotateTo(Transform obj, Vector2 target)
+    {
+        ExecuteCommand(new RotationCommand(obj, target));
+    }
+
+    public void RotateByAngle(Transform obj, float angle)
+    {
+        ExecuteCommandByValue(new RotationCommand(obj), angle);
     }
 
     protected void ExecuteCommand(Command command)
