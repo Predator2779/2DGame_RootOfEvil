@@ -2,7 +2,7 @@ using InputData;
 using GlobalVariables;
 using UnityEngine;
 
-public class TurnController : MonoBehaviour
+public class TurnHandler : MonoBehaviour
 {
     public Vector2 ItemPlace;
 

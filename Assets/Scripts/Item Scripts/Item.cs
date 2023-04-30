@@ -1,64 +1,34 @@
-using UnityEngine;
 using InputData;
+using UnityEngine;
 
 public class Item : MonoBehaviour
 {
-    private BoxCollider2D _collider;
-    [SerializeField] private TurnController _turnController;
-    [SerializeField] private bool _isNotTaken = true;
+    [SerializeField] private bool _isNotTaken;
+    private Collider2D _collider;
+    private ItemHandler _itemHandler;
 
     private void Start()
     {
-        _collider = GetComponent<BoxCollider2D>();
+        _collider = GetComponent<Collider2D>();
 
-        _collider.enabled = _isNotTaken;
+        _isNotTaken = true;
     }
 
-    private void Update()
+    public void PickUp(Transform parent)
     {
-        Using();
-    }
-
-    private void FixedUpdate()
-    {
-        Carrying();
-    }
-
-    private void Carrying()
-    {
-        if (_turnController != null && !_isNotTaken)
+        if (_isNotTaken)
         {
-            transform.localPosition = _turnController.ItemPlace;
+            _collider.isTrigger = false;
+
+            transform.SetParent(parent.transform);
+
+            _isNotTaken = false;
         }
     }
 
-    private void Using()
+    public void Put()
     {
-        if (_turnController != null && InputFunctions.GetKeyE())
-        {
-            if (_isNotTaken)
-            {
-                PickUp();
-            }
-            else
-            {
-                Put();
-            }
-        }
-    }
-
-    private void PickUp()
-    {
-        _collider.isTrigger = false;
-
-        transform.SetParent(_turnController.transform);
-
-        _isNotTaken = false;
-    }
-
-    private void Put()
-    {
-        if (InputFunctions.GetKeyE())
+        if (!_isNotTaken)
         {
             transform.SetParent(null);
 
@@ -70,6 +40,17 @@ public class Item : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        collision.TryGetComponent(out _turnController);
+        if (collision.TryGetComponent(out _itemHandler))
+        {
+            _itemHandler.SelectedItem = this;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.TryGetComponent(out _itemHandler))
+        {
+            _itemHandler.SelectedItem = null;
+        }
     }
 }
