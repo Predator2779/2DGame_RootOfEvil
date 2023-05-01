@@ -1,9 +1,9 @@
-using InputData;
 using UnityEngine;
 
 public class Item : MonoBehaviour
 {
     [SerializeField] private bool _isNotTaken;
+
     private Collider2D _collider;
     private ItemHandler _itemHandler;
 
@@ -12,6 +12,11 @@ public class Item : MonoBehaviour
         _collider = GetComponent<Collider2D>();
 
         _isNotTaken = true;
+    }
+
+    public virtual void Use()
+    {
+
     }
 
     public void PickUp(Transform parent)
@@ -38,19 +43,19 @@ public class Item : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    public virtual void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.TryGetComponent(out _itemHandler))
         {
-            _itemHandler.SelectedItem = this;
+            _itemHandler.selectedItem = this;
         }
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
+    public virtual void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.TryGetComponent(out _itemHandler))
         {
-            _itemHandler.SelectedItem = null;
+            _itemHandler.selectedItem = null;
         }
     }
 }

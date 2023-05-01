@@ -1,5 +1,4 @@
 using GlobalVariables;
-using UnityEngine;
 
 public class Health : IHealth
 {

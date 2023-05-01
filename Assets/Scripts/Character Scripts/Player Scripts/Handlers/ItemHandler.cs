@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class ItemHandler : MonoBehaviour
 {
-    public Item SelectedItem;
-
     [SerializeField] private Item _holdedItem;
     [SerializeField] private TurnHandler _turnHandler;
+
+    public Item selectedItem;
 
     private void Start()
     {
@@ -27,7 +27,7 @@ public class ItemHandler : MonoBehaviour
     {
         if (_holdedItem != null)
         {
-            _holdedItem.transform.localPosition = _turnHandler.ItemPlace;
+            _holdedItem.transform.localPosition = _turnHandler.itemPlace;
         }
     }
 
@@ -43,13 +43,13 @@ public class ItemHandler : MonoBehaviour
 
     private void PickUpItem()
     {
-        if (SelectedItem != null)
+        if (selectedItem != null)
         {
-            SelectedItem.PickUp(transform);
+            selectedItem.PickUp(transform);
 
-            _holdedItem = SelectedItem;
+            _holdedItem = selectedItem;
 
-            SelectedItem = null;
+            selectedItem = null;
         }
     }
 

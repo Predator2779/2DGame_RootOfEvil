@@ -4,9 +4,10 @@ using UnityEngine;
 
 public class TurnHandler : MonoBehaviour
 {
-    public Vector2 ItemPlace;
-
     [SerializeField] private Transform _skin;
+    
+    public Vector2 itemPlace;
+
     private Character _player;
 
     private void Start()
@@ -29,13 +30,13 @@ public class TurnHandler : MonoBehaviour
         {
             _player.RotateByAngle(_skin, 0);
 
-            ItemPlace = GlobalConstants.ItemPositionLeft;
+            itemPlace = GlobalConstants.ItemPositionLeft;
         }
         else if (HorizontalAxis > 0)
         {
             _player.RotateByAngle(_skin, 180f);
 
-            ItemPlace = GlobalConstants.ItemPositionRight;
+            itemPlace = GlobalConstants.ItemPositionRight;
         }
     }
 }

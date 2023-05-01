@@ -5,19 +5,14 @@ public class InputHandler : MonoBehaviour
 {
     private Character _player;
 
-    private void Start()
+    private void Awake()
     {
-        Initialize();
+        _player = GetComponent<Character>();
     }
 
     private void FixedUpdate()
     {
         _player.MoveTo(GetMovementVector());
-    }
-
-    private void Initialize()
-    {
-        _player = GetComponent<Character>();
     }
 
     private Vector2 GetMovementVector()
