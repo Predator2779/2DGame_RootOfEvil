@@ -1,10 +1,11 @@
-using InputData;
 using UnityEngine;
 
-public class QuestAction : MonoBehaviour
+public class QuestAction : MonoBehaviour, IUsable
 {
     [SerializeField] private Questor _questor;
     [SerializeField] private Sprite _newSprite;
+
+    private bool _isDone = false;
 
     private string _questItem;
 
@@ -13,29 +14,38 @@ public class QuestAction : MonoBehaviour
         _questItem = _questor.questItem.nameItem;
     }
 
-    private void CompleteAction()
+    public void CheckUsing()
     {
-        _questor.CompleteAction();
-
-        if (_newSprite != null)
+        if (_questItem == null)
         {
-            GetComponent<SpriteRenderer>().sprite = _newSprite;
+            CompleteAction();
+        }
+    }
+    
+    public void CheckUsing(Item item)
+    {
+        if (_questItem != null && item.nameItem == _questItem)
+        {
+            CompleteAction();
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void CompleteAction()
     {
-        if (collision.TryGetComponent<Item>(out Item item))
+        if (!_isDone)
         {
-            if (_questItem != null && item.nameItem == _questItem)
+            _questor.CompleteAction();
+
+            if (_newSprite != null)
             {
-                CompleteAction();
+                //GetComponent<SpriteRenderer>().sprite = _newSprite;
+            }
+            else
+            {
+                GetComponent<SpriteRenderer>().color = Color.yellow;
             }
 
-            if (_questItem == null && InputFunctions.GetLMB())
-            {
-                CompleteAction();
-            }
+            _isDone = true;
         }
     }
 }

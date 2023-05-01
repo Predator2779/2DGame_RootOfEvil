@@ -38,5 +38,9 @@ public class TurnHandler : MonoBehaviour
 
             itemPlace = GlobalConstants.ItemPositionRight;
         }
+        else
+        {
+            itemPlace = GlobalConstants.ItemPositionCenter;
+        }
     }
 }

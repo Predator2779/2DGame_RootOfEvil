@@ -3,16 +3,45 @@ using InputData;
 
 public class InputHandler : MonoBehaviour
 {
+    public IUsable usable;
+
     private Character _player;
+    private ItemHandler _itemHandler;
 
     private void Awake()
     {
         _player = GetComponent<Character>();
+        _itemHandler = GetComponent<ItemHandler>();
+    }
+
+    private void Update()
+    {
+        GetE();
+
+        GetLMB();
     }
 
     private void FixedUpdate()
     {
         _player.MoveTo(GetMovementVector());
+    }
+
+    private void GetE()
+    {
+        if (InputFunctions.GetKeyE())
+        {
+            _itemHandler.PutItem();
+
+            _itemHandler.PickUpItem();
+        }
+    }
+
+    private void GetLMB()
+    {
+        if (usable != null)
+        {
+            _itemHandler.UseAnObject(usable);
+        }
     }
 
     private Vector2 GetMovementVector()

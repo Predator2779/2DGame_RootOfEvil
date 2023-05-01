@@ -5,17 +5,15 @@ public class ItemHandler : MonoBehaviour
 {
     [SerializeField] private Item _holdedItem;
     [SerializeField] private TurnHandler _turnHandler;
+    [SerializeField] private int _itemSortingOrder;
 
     public Item selectedItem;
+
+    private int _oldItemSortingOrder;
 
     private void Start()
     {
         _turnHandler = GetComponent<TurnHandler>();
-    }
-
-    private void Update()
-    {
-        GetE();
     }
 
     private void FixedUpdate()
@@ -31,17 +29,15 @@ public class ItemHandler : MonoBehaviour
         }
     }
 
-    private void GetE()
+    public void UseAnObject(IUsable usable)
     {
-        if (InputFunctions.GetKeyE())
+        if (_holdedItem != null && InputFunctions.GetLMB())
         {
-            PutItem();
-
-            PickUpItem();
+            _holdedItem.Use(usable);
         }
     }
 
-    private void PickUpItem()
+    public void PickUpItem()
     {
         if (selectedItem != null)
         {
@@ -49,17 +45,38 @@ public class ItemHandler : MonoBehaviour
 
             _holdedItem = selectedItem;
 
+            _oldItemSortingOrder = _holdedItem.GetComponent<SpriteRenderer>().sortingOrder;
+            _holdedItem.GetComponent<SpriteRenderer>().sortingOrder = _itemSortingOrder;
+
             selectedItem = null;
         }
     }
 
-    private void PutItem()
+    public void PutItem()
     {
         if (_holdedItem != null)
         {
+            _holdedItem.GetComponent<SpriteRenderer>().sortingOrder = _oldItemSortingOrder;
+
             _holdedItem.Put();
 
             _holdedItem = null;
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.TryGetComponent<Item>(out Item item))
+        {
+            selectedItem = item;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.TryGetComponent<Item>(out Item item))
+        {
+            selectedItem = null;
         }
     }
 }
