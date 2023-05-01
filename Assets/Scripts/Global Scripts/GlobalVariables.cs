@@ -39,9 +39,9 @@ namespace GlobalVariables
 
         #region Position
 
-        public static Vector2 ItemPositionLeft = new Vector2(-1, -0.25f);
-        public static Vector2 ItemPositionCenter = new Vector2(0, -0.25f);
-        public static Vector2 ItemPositionRight = new Vector2(1, -0.25f);
+        public static Vector2 ItemPositionLeft = new Vector2(-8, -4);
+        public static Vector2 ItemPositionCenter = new Vector2(0, -4);
+        public static Vector2 ItemPositionRight = new Vector2(8, -4);
 
         #endregion
     }

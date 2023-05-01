@@ -4,12 +4,14 @@ public class Item : MonoBehaviour
 {
     [SerializeField] private bool _isNotTaken;
 
-    private Collider2D _collider;
+    public string nameItem;
+
+    private Collider2D _trigger;
     private ItemHandler _itemHandler;
 
-    private void Start()
+    private void Awake()
     {
-        _collider = GetComponent<Collider2D>();
+        _trigger = GetComponent<Collider2D>();
 
         _isNotTaken = true;
     }
@@ -23,7 +25,7 @@ public class Item : MonoBehaviour
     {
         if (_isNotTaken)
         {
-            _collider.isTrigger = false;
+            _trigger.isTrigger = false;
 
             transform.SetParent(parent.transform);
 
@@ -37,7 +39,7 @@ public class Item : MonoBehaviour
         {
             transform.SetParent(null);
 
-            _collider.isTrigger = true;
+            _trigger.isTrigger = true;
 
             _isNotTaken = true;
         }
