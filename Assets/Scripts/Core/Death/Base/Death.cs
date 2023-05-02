@@ -1,11 +1,11 @@
 using UnityEngine;
 
-namespace Death.Base
+namespace Core.Death.Base
 {
     public class Death : MonoBehaviour, IDamageable
     {
-        [SerializeField] private int maxHealth { get; set; }
-
+        [field:SerializeField] public int maxHealth { get; protected  set; }
+        
         public int currentHealth { get; protected set; }
 
         private void Awake()
@@ -13,7 +13,7 @@ namespace Death.Base
             currentHealth = maxHealth;
         }
 
-        public void Damage(int amount)
+        public virtual void Damage(int amount)
         {
             currentHealth -= amount;
         }

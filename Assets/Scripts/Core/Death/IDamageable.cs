@@ -1,4 +1,4 @@
-﻿namespace Death
+﻿namespace Core.Death
 {
     public interface IDamageable
     {
