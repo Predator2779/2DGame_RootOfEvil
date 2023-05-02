@@ -5,7 +5,8 @@ public class ItemHandler : MonoBehaviour
 {
     [SerializeField] private Item _holdedItem;
     [SerializeField] private TurnHandler _turnHandler;
-    [SerializeField] private int _itemSortingOrder;
+
+    private int _itemSortingOrder;
 
     public Item selectedItem;
 
@@ -14,6 +15,7 @@ public class ItemHandler : MonoBehaviour
     private void Start()
     {
         _turnHandler = GetComponent<TurnHandler>();
+        _itemSortingOrder = GetComponent<SpriteRenderer>().sortingOrder + 1;
     }
 
     private void FixedUpdate()
