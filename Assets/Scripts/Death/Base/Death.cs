@@ -15,7 +15,7 @@ namespace Death.Base
 
         public void Damage(int amount)
         {
-            currentHealth -= maxHealth;
+            currentHealth -= amount;
         }
     }
 }
