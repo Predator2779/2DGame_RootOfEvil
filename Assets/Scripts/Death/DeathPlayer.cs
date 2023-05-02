@@ -1,11 +1,7 @@
-﻿using UnityEngine;
-
-namespace Core.Death
+﻿namespace Death
 {
-    public class DeathPlayer : global::Death.Base.Death
+    public class DeathPlayer : Base.Death
     {
-        
-        
         
     }
 }
