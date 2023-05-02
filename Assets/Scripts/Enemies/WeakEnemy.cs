@@ -4,17 +4,8 @@ using UnityEngine;
 
 namespace Enemies
 {
-    public abstract class WeakEnemy : BaseEnemy
+    public class WeakEnemy : BaseEnemy
     {
-        private void Start()
-        {
-        
-        }
-
-        private void Update()
-        {
-        }
-        
         public override void Flip()
         {
         }

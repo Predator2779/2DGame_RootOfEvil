@@ -1,13 +1,13 @@
 using GlobalVariables;
 
-public class Health : IHealth
+public partial class Health : IHealth
 {
     private readonly int _minHitPoints = GlobalConstants.MinHitPoints;
     private readonly int _maxHitPoints;
     private readonly float _coefDefense;
     private int _hitPoints;
 
-    #region Конструктор
+    #region пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 
     public Health(int MaxHitPoints, float CoefDefense)
     {

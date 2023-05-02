@@ -8,6 +8,7 @@ namespace Enemies.Base
         [SerializeField] protected float attackDamage;
         [SerializeField] protected float attackRadius;
         [SerializeField] protected Transform? attackPosition;
+        [SerializeField][Range(0,10)] protected int levelOfEvil;
     
         //public  GameObject?  player { get; protected internal set; }
 
