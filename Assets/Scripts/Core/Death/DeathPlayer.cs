@@ -16,6 +16,7 @@ namespace Core.Death
         public override void Damage(int amount)
         {
             base.Damage(amount);
+
             
             playerHealth.SetCurrentHealth(currentHealth);
         }
