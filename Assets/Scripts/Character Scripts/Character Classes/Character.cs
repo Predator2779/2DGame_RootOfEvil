@@ -7,12 +7,26 @@ public class Character : MonoBehaviour
     [SerializeField][Range(0, 10)] private int _movementSpeed;
 
     private Rigidbody2D _rbody;
+    private Animator _animator;
 
     private void Awake()
     {
         _rbody = GetComponent<Rigidbody2D>();
     }
 
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Mouse1))
+        {
+            Attack();
+        }
+    }
+
+    private void Attack()
+    {
+        
+    }
+    
     public void MoveTo(Vector2 movementDirection)
     {
         float speed = _movementSpeed * GlobalConstants.CoefMovementSpeed;

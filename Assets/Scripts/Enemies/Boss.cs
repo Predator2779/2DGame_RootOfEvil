@@ -1,5 +1,6 @@
 using System.Collections;
 using Enemies.Base;
+using UnityEngine;
 
 namespace Enemies
 {
@@ -16,6 +17,11 @@ namespace Enemies
         }
 
         public override void Flip()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override void Hit(Collider2D col)
         {
             throw new System.NotImplementedException();
         }
