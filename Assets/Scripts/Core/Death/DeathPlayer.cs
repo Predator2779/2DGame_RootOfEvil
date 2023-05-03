@@ -7,7 +7,6 @@ namespace Core.Death
     public class DeathPlayer : Base.Death
     {
         [SerializeField] private Health.PlayerHealth playerHealth;
-        
         private void Start()
         {
             playerHealth.SetMaxHealth(maxHealth);
