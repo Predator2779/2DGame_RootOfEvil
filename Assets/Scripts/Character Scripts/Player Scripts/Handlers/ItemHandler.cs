@@ -6,10 +6,9 @@ public class ItemHandler : MonoBehaviour
     [SerializeField] private Item _holdedItem;
     [SerializeField] private TurnHandler _turnHandler;
 
-    private int _itemSortingOrder;
-
     public Item selectedItem;
 
+    private int _itemSortingOrder;
     private int _oldItemSortingOrder;
 
     private void Start()

@@ -61,6 +61,9 @@ public class Questor : MonoBehaviour
 
     private void PassQuest()
     {
+        /// Здесь пока -1, так как неизвестны критерии изменения уровня ЗЛА.
+        EventHandler.OnEvilLevelChanged?.Invoke(-1);
+
         _dialogText.text = _textDoneQuest;
         _isDone = true;
     }
