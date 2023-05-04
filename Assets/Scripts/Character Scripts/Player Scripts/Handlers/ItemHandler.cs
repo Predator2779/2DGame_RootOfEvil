@@ -14,7 +14,7 @@ public class ItemHandler : MonoBehaviour
     private void Start()
     {
         _turnHandler = GetComponent<TurnHandler>();
-        _itemSortingOrder = GetComponent<SpriteRenderer>().sortingOrder + 1;
+        _itemSortingOrder = transform.GetChild(1).GetComponent<SpriteRenderer>().sortingOrder + 1;
     }
 
     private void FixedUpdate()

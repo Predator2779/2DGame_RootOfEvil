@@ -38,11 +38,7 @@ public class QuestAction : MonoBehaviour, IUsable
 
             if (_newSprite != null)
             {
-                //GetComponent<SpriteRenderer>().sprite = _newSprite;
-            }
-            else
-            {
-                GetComponent<SpriteRenderer>().color = Color.yellow;
+                GetComponent<SpriteRenderer>().sprite = _newSprite;
             }
 
             _isDone = true;

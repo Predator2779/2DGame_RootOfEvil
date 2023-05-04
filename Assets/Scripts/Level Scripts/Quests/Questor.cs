@@ -32,7 +32,7 @@ public class Questor : MonoBehaviour
 
     private void Start()
     {
-        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _spriteRenderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
         _spriteRenderer.sprite = _sadNPC;
     }
 
