@@ -9,13 +9,49 @@ public class EvilLevel : MonoBehaviour
 
     private void Start()
     {
-        EventHandler.OnEvilLevelChanged.AddListener(ChangeEvilLevel);
+        EventHandler.OnQuestPassed.AddListener(EvilLevelDown);
+        EventHandler.OnEvilLevelChanged.Invoke(_evillLevel);
     }
 
-    private void ChangeEvilLevel(int value)
+    private void EvilLevelUp()
     {
-        _evillLevel += value;
+        _evillLevel++;
 
-        _evilLevelCounter.text = $"Текущий уровень зла: {_evillLevel}";
+        EvilLevelChange();
+    }  
+    
+    private void EvilLevelDown()
+    {
+        _evillLevel--;
+
+        EvilLevelChange();
     }
+
+    private void EvilLevelChange()
+    {
+        _evilLevelCounter.text = $"Текущий уровень зла: {_evillLevel}";
+
+        EventHandler.OnEvilLevelChanged.Invoke(_evillLevel);
+    }
+
+    #region EDITOR_MODE
+
+    private int _oldEvilLevel;
+
+    private void Update()
+    {
+        CheckLevel();
+    }
+
+    private void CheckLevel()
+    {
+        if (_evillLevel != _oldEvilLevel)
+        {
+            EvilLevelChange();
+
+            _oldEvilLevel = _evillLevel;
+        }
+    }
+
+    #endregion
 }

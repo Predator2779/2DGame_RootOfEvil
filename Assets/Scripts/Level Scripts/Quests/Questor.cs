@@ -4,6 +4,11 @@ using TMPro;
 
 public class Questor : MonoBehaviour
 {
+    [Header("NPC")]
+    [SerializeField] private Sprite _smileNPC;
+    [SerializeField] private Sprite _sadNPC;
+
+    [Header("Dialogue")]
     [SerializeField] private Image _dialogBox;
     [SerializeField] private TextMeshProUGUI _dialogText;
 
@@ -14,12 +19,22 @@ public class Questor : MonoBehaviour
     [SerializeField] private string _textDoneQuest = "Ты отрубил все проклятые мизинцы! Поздравляю!";
     [SerializeField] private string _endingPluralWord = "ов";
 
+    [Header("Counts")]
     [SerializeField] private int _countQuestAction;
 
+    [Header("Booleans")]
     [SerializeField] private bool _isAccepted = false;
     [SerializeField] private bool _isDone = false;
 
     public Item questItem;
+
+    private SpriteRenderer _spriteRenderer;
+
+    private void Start()
+    {
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _spriteRenderer.sprite = _sadNPC;
+    }
 
     public void CompleteAction()
     {
@@ -61,9 +76,9 @@ public class Questor : MonoBehaviour
 
     private void PassQuest()
     {
-        /// Здесь пока -1, так как неизвестны критерии изменения уровня ЗЛА.
-        EventHandler.OnEvilLevelChanged?.Invoke(-1);
+        EventHandler.OnQuestPassed?.Invoke();
 
+        _spriteRenderer.sprite = _smileNPC;
         _dialogText.text = _textDoneQuest;
         _isDone = true;
     }
