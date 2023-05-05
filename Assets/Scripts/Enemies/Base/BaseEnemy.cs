@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -9,14 +10,24 @@ namespace Enemies.Base
         [SerializeField] protected float attackRadius;
         [SerializeField] protected Transform? attackPosition;
         [SerializeField][Range(0,10)] protected int levelOfEvil;
+        [SerializeField] private Character character;
 
-        public GameObject?  player { get; protected internal set; }
+        protected virtual void Update()
+        {
+            Flip();
+        }
 
-        public abstract void Flip();
+        private void Flip()
+        {
+            if(Vector2.Distance(character.transform.position, transform.position) < 40f)
+                transform.eulerAngles = character!.transform.position.x > transform.position.x
+                    ? new Vector3(0, 0, 0)
+                    : new Vector3(0, 180, 0);
+        }
 
-        public abstract void Hit(Collider2D col);
+        protected abstract void Hit(Collider2D col);
         
-        public abstract IEnumerator StopMove(float time);
+        protected abstract IEnumerator StopMove(float time);
     
     }
 }

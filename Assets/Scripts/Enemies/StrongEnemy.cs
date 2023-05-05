@@ -7,21 +7,12 @@ namespace Enemies
     public class StrongEnemy : BaseEnemy
     {
 
-        private void Update()
-        {
-        
-        }
-
-        public override void Flip()
-        {
-        }
-
-        public override void Hit(Collider2D col)
+        protected override void Hit(Collider2D col)
         {
             throw new System.NotImplementedException();
         }
 
-        public override IEnumerator StopMove(float time)
+        protected override IEnumerator StopMove(float time)
         {
             throw new System.NotImplementedException();
         }

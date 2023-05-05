@@ -16,7 +16,7 @@ public class EvilLevel : MonoBehaviour
     private void EvilLevelUp()
     {
         _evillLevel++;
-
+        
         EvilLevelChange();
     }  
     
@@ -29,7 +29,7 @@ public class EvilLevel : MonoBehaviour
 
     private void EvilLevelChange()
     {
-        _evilLevelCounter.text = $"Текущий уровень зла: {_evillLevel}";
+        _evilLevelCounter.text = $"пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ: {_evillLevel}";
 
         EventHandler.OnEvilLevelChanged.Invoke(_evillLevel);
     }
