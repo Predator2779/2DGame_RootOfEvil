@@ -13,7 +13,8 @@ public class Questor : MonoBehaviour
     [SerializeField] private TextMeshProUGUI _dialogText;
 
     [SerializeField] private string _textGreeting = "Приветствую!";
-    [SerializeField] private string _textGiveQuest = 
+    [SerializeField]
+    private string _textGiveQuest =
         "Тебе нужно отрубить все мизинцы на пальцах ног, в этой деревне!";
     [SerializeField] private string _textNoDoneQuest = "Прошу, отруби все мизинцы на пальцах ног в деревне!";
     [SerializeField] private string _textDoneQuest = "Ты отрубил все проклятые мизинцы! Поздравляю!";
@@ -22,9 +23,8 @@ public class Questor : MonoBehaviour
     [Header("Counts")]
     [SerializeField] private int _countQuestAction;
 
-    [Header("Booleans")]
-    [SerializeField] private bool _isAccepted = false;
-    [SerializeField] private bool _isDone = false;
+    private enum QuestorStates { Greeting, GiveQuest, NoDoneQuset, DoneQuset };
+    private QuestorStates _currentState;
 
     public Item questItem;
 
@@ -34,6 +34,13 @@ public class Questor : MonoBehaviour
     {
         _spriteRenderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
         _spriteRenderer.sprite = _sadNPC;
+
+        _currentState = QuestorStates.Greeting;
+    }
+
+    public void QuestAvailability()
+    {
+        _currentState = QuestorStates.GiveQuest;
     }
 
     public void CompleteAction()
@@ -42,36 +49,38 @@ public class Questor : MonoBehaviour
 
         if (_countQuestAction <= 0)
         {
-            _isDone = true;
+            _currentState = QuestorStates.DoneQuset;
         }
     }
 
-    private void CheckCompleteQuest()
+    private void CheckCompleteQuest(QuestorStates currentState)
     {
-        if (!_isAccepted && !_isDone)
+        switch (currentState)
         {
-            GiveQuest();
-        }
-        else if (_isAccepted && !_isDone)
-        {
-            Dialogue(_textNoDoneQuest + 
-                $" [{questItem.nameItem}{_endingPluralWord}: {_countQuestAction}]");
-        }
-        else if (_isAccepted && _isDone)
-        {
-            PassQuest();
-        }
-        else
-        {
-            Dialogue(_textGreeting);
+            case QuestorStates.Greeting:
+                Greeting();
+                break;
+            case QuestorStates.GiveQuest:
+                GiveQuest();
+                break;
+            case QuestorStates.NoDoneQuset:
+                Dialogue(_textNoDoneQuest + 
+                    $" [{questItem.nameItem}{_endingPluralWord}: {_countQuestAction}]");
+                break;
+            case QuestorStates.DoneQuset:
+                PassQuest();
+                break;
+            default:
+                break;
         }
     }
 
     private void GiveQuest()
     {
-        _dialogText.text = _textGiveQuest + 
+        _dialogText.text = _textGiveQuest +
             $" [{questItem.nameItem}{_endingPluralWord}: {_countQuestAction}]";
-        _isAccepted = true;
+
+        _currentState = QuestorStates.NoDoneQuset;
     }
 
     private void PassQuest()
@@ -80,9 +89,14 @@ public class Questor : MonoBehaviour
 
         _spriteRenderer.sprite = _smileNPC;
         _dialogText.text = _textDoneQuest;
-        _isDone = true;
+
+        _currentState = QuestorStates.Greeting;
     }
 
+    private void Greeting()
+    {
+        Dialogue(_textGreeting);
+    }
 
     private void Dialogue(string text)
     {
@@ -95,7 +109,7 @@ public class Questor : MonoBehaviour
         {
             _dialogBox.gameObject.SetActive(true);
 
-            CheckCompleteQuest();
+            CheckCompleteQuest(_currentState);
         }
     }
 

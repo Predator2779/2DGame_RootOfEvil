@@ -29,7 +29,7 @@ namespace GlobalVariables
 
         #region Float Constants
 
-        public const float CoefMovementSpeed = 5f;
+        public const float CoefMovementSpeed = 15f;
         public const float CoefMouseSensitivityX = 2f;
         public const float CoefMouseSensitivityY = 0.3f;
         public const float MinRangeDamage = 0.65f;
