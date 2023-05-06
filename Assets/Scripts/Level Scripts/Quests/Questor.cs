@@ -4,9 +4,19 @@ using TMPro;
 
 public class Questor : MonoBehaviour
 {
-    [Header("NPC")]
+    [Header("EvilLevel")]
+    [SerializeField] private EvilLevel _evilLevel;
+    [SerializeField] private int _evilLevelQuestAvailability;
+
+    [Header("Sprites")]
     [SerializeField] private Sprite _smileNPC;
     [SerializeField] private Sprite _sadNPC;
+
+    [Header("OtherQuest")]
+    [SerializeField] private Questor _passedNPC;
+
+    public Questor startNPC;
+    public string textPassedNPC = "Спасибо, за пирожки!";
 
     [Header("Dialogue")]
     [SerializeField] private Image _dialogBox;
@@ -20,13 +30,21 @@ public class Questor : MonoBehaviour
     [SerializeField] private string _textDoneQuest = "Ты отрубил все проклятые мизинцы! Поздравляю!";
     [SerializeField] private string _endingPluralWord = "ов";
 
-    [Header("Counts")]
+    [Header("Count")]
     [SerializeField] private int _countQuestAction;
 
-    private enum QuestorStates { Greeting, GiveQuest, NoDoneQuset, DoneQuset };
-    private QuestorStates _currentState;
+    [SerializeField]
+    private enum QuestorStates
+    { OtherQuest, Greeting, GiveQuest, NoDoneQuest, DoneQuest };
 
+    [SerializeField] private QuestorStates _currentState;
+
+    [Header("ItemS")]
     public Item questItem;
+
+    [Header("Booleans")]
+    public bool questIsDone;
+    public bool isOtherQuest;
 
     private SpriteRenderer _spriteRenderer;
 
@@ -36,20 +54,28 @@ public class Questor : MonoBehaviour
         _spriteRenderer.sprite = _sadNPC;
 
         _currentState = QuestorStates.Greeting;
-    }
 
-    public void QuestAvailability()
-    {
-        _currentState = QuestorStates.GiveQuest;
-    }
-
-    public void CompleteAction()
-    {
-        _countQuestAction--;
-
-        if (_countQuestAction <= 0)
+        if (_passedNPC != null)
         {
-            _currentState = QuestorStates.DoneQuset;
+            _passedNPC.startNPC = this;
+        }
+    }
+
+    private void QuestAvailability()
+    {
+        if (isOtherQuest)
+        {
+            _currentState = QuestorStates.OtherQuest;
+
+            return;
+        }
+
+        if (
+            _evilLevel.GetCurrentEvilLevel() <= _evilLevelQuestAvailability
+            && !questIsDone
+            && _currentState == QuestorStates.Greeting)
+        {
+            _currentState = QuestorStates.GiveQuest;
         }
     }
 
@@ -63,34 +89,18 @@ public class Questor : MonoBehaviour
             case QuestorStates.GiveQuest:
                 GiveQuest();
                 break;
-            case QuestorStates.NoDoneQuset:
-                Dialogue(_textNoDoneQuest + 
-                    $" [{questItem.nameItem}{_endingPluralWord}: {_countQuestAction}]");
+            case QuestorStates.NoDoneQuest:
+                NoDoneQuest();
                 break;
-            case QuestorStates.DoneQuset:
+            case QuestorStates.DoneQuest:
                 PassQuest();
+                break;
+            case QuestorStates.OtherQuest:
+                PassOtherQuest();
                 break;
             default:
                 break;
         }
-    }
-
-    private void GiveQuest()
-    {
-        _dialogText.text = _textGiveQuest +
-            $" [{questItem.nameItem}{_endingPluralWord}: {_countQuestAction}]";
-
-        _currentState = QuestorStates.NoDoneQuset;
-    }
-
-    private void PassQuest()
-    {
-        EventHandler.OnQuestPassed?.Invoke();
-
-        _spriteRenderer.sprite = _smileNPC;
-        _dialogText.text = _textDoneQuest;
-
-        _currentState = QuestorStates.Greeting;
     }
 
     private void Greeting()
@@ -103,11 +113,62 @@ public class Questor : MonoBehaviour
         _dialogText.text = text;
     }
 
+    private void GiveQuest()
+    {
+        _dialogText.text = _textGiveQuest + $" [{questItem.nameItem}{_endingPluralWord}: {_countQuestAction}]";
+
+        if (_passedNPC != null)
+        {
+            _passedNPC.isOtherQuest = true;
+        }
+
+        _currentState = QuestorStates.NoDoneQuest;
+    }
+
+    public void CompleteAction()
+    {
+        _countQuestAction--;
+
+        if (_countQuestAction <= 0)
+        {
+            _currentState = QuestorStates.DoneQuest;
+        }
+    }
+
+    private void NoDoneQuest()
+    {
+        Dialogue(_textNoDoneQuest + $" [{questItem.nameItem}{_endingPluralWord}: {_countQuestAction}]");
+    }
+
+    private void PassQuest()
+    {
+        EventHandler.OnQuestPassed?.Invoke();
+
+        _spriteRenderer.sprite = _smileNPC;
+        _dialogText.text = _textDoneQuest;
+
+        questIsDone = true;
+
+        _currentState = QuestorStates.Greeting;
+    }
+
+    private void PassOtherQuest()
+    {
+        _spriteRenderer.sprite = _smileNPC;
+        _dialogText.text = startNPC.textPassedNPC;
+
+        isOtherQuest = false;
+
+        _currentState = QuestorStates.Greeting;
+    }
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.transform.TryGetComponent(out InputHandler inputHandler))
         {
             _dialogBox.gameObject.SetActive(true);
+
+            QuestAvailability();
 
             CheckCompleteQuest(_currentState);
         }
