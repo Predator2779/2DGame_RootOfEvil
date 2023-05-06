@@ -19,15 +19,7 @@ namespace Enemies
         {
         }
 
-        private void Update()
-        {
-        }
-
-        public override void Flip()
-        {
-        }
-
-        public override void Hit(Collider2D col)
+        protected override void Hit(Collider2D col)
         {
             if (attackPosition == null) return;
 
@@ -40,7 +32,7 @@ namespace Enemies
                 _currentTimer = attackDelay;
                 if (damageHit.TryGetComponent(out DeathPlayer deathPlayer))
                 {
-                    deathPlayer.Damage(20);
+                    deathPlayer.Damage(attackDamage);
                 }
             }
         }
@@ -50,7 +42,7 @@ namespace Enemies
             Hit(col);
         }
 
-        public override IEnumerator StopMove(float time)
+        protected override IEnumerator StopMove(float time)
         {
             throw new System.NotImplementedException();
         }

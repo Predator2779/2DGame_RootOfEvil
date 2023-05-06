@@ -12,6 +12,11 @@ namespace Core.Death
             enemyHealth.SetMaxHealth(maxHealth);
         }
 
+        protected override void DestroyObject(int health)
+        {
+            base.DestroyObject(health);
+        }
+        
         public override void Damage(int amount)
         {
             base.Damage(amount);
