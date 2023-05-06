@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Diagnostics;
-using System.Security.Cryptography;
 using System.Threading;
 using Core.Death;
 using UnityEngine;
@@ -18,6 +17,7 @@ public class Character : MonoBehaviour
 
     private bool _canAttack = true;
     private Rigidbody2D _rbody;
+    private Animator _animator;
 
     private void Awake()
     {
@@ -34,13 +34,14 @@ public class Character : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             if (!_canAttack) return;
-            
+
             var damageHit = Physics2D.OverlapCircleAll(attackPosition.position, attackRadius);
             foreach (var hit in damageHit)
             {
                 if (hit.TryGetComponent(out DeathEnemy deathEnemy))
                     deathEnemy.Damage(attackDamage);
             }
+
             StartCoroutine(CanAttack());
         }
     }
