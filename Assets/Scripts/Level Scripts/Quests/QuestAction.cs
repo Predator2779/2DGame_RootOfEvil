@@ -5,6 +5,8 @@ public class QuestAction : MonoBehaviour, IUsable
     [SerializeField] private Questor _questor;
     [SerializeField] private Sprite _newSprite;
 
+    private bool _isDone = false;
+
     private string _questItem;
 
     private void Awake()
@@ -30,7 +32,7 @@ public class QuestAction : MonoBehaviour, IUsable
 
     private void CompleteAction()
     {
-        if (!_questor.questIsDone)
+        if (!_isDone)
         {
             _questor.CompleteAction();
 
@@ -38,6 +40,8 @@ public class QuestAction : MonoBehaviour, IUsable
             {
                 GetComponent<SpriteRenderer>().sprite = _newSprite;
             }
+
+            _isDone = true;
         }
     }
 }
