@@ -9,32 +9,45 @@ namespace Enemies
 {
     public class WeakEnemy : BaseEnemy
     {
-        [SerializeField] private float attackDistance;
         [SerializeField] private float attackDelay;
-        [SerializeField] private GameObject enemy;
-
+        
+        
         private float _currentTimer;
-
+        private bool _canAttack = true;
         private void Awake()
         {
         }
 
+
+        protected override void Update()
+        {
+            base.Update();
+            Attack();
+        }
+
+        private void Attack()
+        {
+            if( attackPosition == null) return;
+            if(!_canAttack) return;
+            
+            
+            var damageHit = Physics2D.OverlapCircle(attackPosition.position, attackRadius);
+            
+            if(damageHit.TryGetComponent(out DeathPlayer deathPlayer))
+                deathPlayer.Damage(attackDamage);
+
+            StartCoroutine(CanAttack());
+        }
+        
+        private IEnumerator CanAttack()
+        {
+            _canAttack = false;
+            yield return new WaitForSeconds(attackDelay);
+            _canAttack = true;
+        }
+        
         protected override void Hit(Collider2D col)
         {
-            if (attackPosition == null) return;
-
-            var damageHit = Physics2D.OverlapCircle(attackPosition.position, attackRadius);
-
-            if (_currentTimer >= 0f)
-                _currentTimer -= Time.deltaTime;
-            else if (damageHit)
-            {
-                _currentTimer = attackDelay;
-                if (damageHit.TryGetComponent(out DeathPlayer deathPlayer))
-                {
-                    deathPlayer.Damage(attackDamage);
-                }
-            }
         }
 
         private void OnTriggerStay2D(Collider2D col)
