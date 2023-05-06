@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: e92c555e79105574db499a6e8a17995d
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - Wizland
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: d8558ec6463494f44a9a59390418ce09, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -87,7 +87,7 @@ SpriteRenderer:
   m_Size: {x: 1, y: 2}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 1
+  m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
 --- !u!114 &-3136089770575082454
@@ -106,10 +106,8 @@ MonoBehaviour:
   attackRadius: 20.48
   attackPosition: {fileID: 8866721434738703182}
   levelOfEvil: 5
-  attackDistance: 1
+  character: {fileID: 0}
   attackDelay: 3
-  enemy: {fileID: 4968303310900559088}
-  _player: {fileID: 0}
 --- !u!114 &2112530496799405019
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -222,6 +220,10 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 562539075556542764, guid: 4c73f0a617ca46644ba82953832c8e13, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 4100f52a95f98b84ca135d96f54960c0, type: 3}
     - target: {fileID: 986613271252251228, guid: 4c73f0a617ca46644ba82953832c8e13, type: 3}
       propertyPath: m_Name
       value: Canvas
