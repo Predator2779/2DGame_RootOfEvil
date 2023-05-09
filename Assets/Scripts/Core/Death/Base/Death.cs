@@ -13,18 +13,9 @@ namespace Core.Death.Base
             currentHealth = maxHealth;
         }
 
-        protected virtual void DestroyObject(int health)
-        {
-            if (health >= 0) return;
-
-            Destroy(gameObject);
-        }
-
         public virtual void Damage(int amount)
         {
             currentHealth -= amount;
-
-            DestroyObject(currentHealth);
         }
     }
 }

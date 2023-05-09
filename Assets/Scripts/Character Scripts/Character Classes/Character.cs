@@ -17,7 +17,6 @@ public class Character : MonoBehaviour
 
     private bool _canAttack = true;
     private Rigidbody2D _rbody;
-    private Animator _animator;
 
     private void Awake()
     {

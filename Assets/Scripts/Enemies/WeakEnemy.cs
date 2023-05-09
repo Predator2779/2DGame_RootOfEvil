@@ -14,32 +14,48 @@ namespace Enemies
         [SerializeField] private GameObject enemy;
 
         private float _currentTimer;
+        private bool _canAttack = true;
 
         private void Awake()
         {
         }
 
+        protected override void Update()
+        {
+            base.Update();
+
+            Attack();
+        }
+
         protected override void Hit(Collider2D col)
         {
-            if (attackPosition == null) return;
 
-            var damageHit = Physics2D.OverlapCircle(attackPosition.position, attackRadius);
+        }
 
-            if (_currentTimer >= 0f)
-                _currentTimer -= Time.deltaTime;
-            else if (damageHit)
+        private void Attack()
+        {
+            //if (attackPosition == null) return;
+
+            if (!_canAttack) return;
+
+            var damageHit = Physics2D.OverlapCircleAll(attackPosition.position, attackRadius);
+
+            foreach (var item in damageHit)
             {
-                _currentTimer = attackDelay;
-                if (damageHit.TryGetComponent(out DeathPlayer deathPlayer))
+                if (item.TryGetComponent(out DeathPlayer deathPlayer))
                 {
                     deathPlayer.Damage(attackDamage);
                 }
             }
+
+            StartCoroutine(CanAttack());
         }
 
-        private void OnTriggerStay2D(Collider2D col)
+        private IEnumerator CanAttack()
         {
-            Hit(col);
+            _canAttack = false;
+            yield return new WaitForSeconds(attackDelay);
+            _canAttack = true;
         }
 
         protected override IEnumerator StopMove(float time)

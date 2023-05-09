@@ -32,7 +32,7 @@ public class ItemHandler : MonoBehaviour
 
     public void UseAnObject(IUsable usable)
     {
-        if (_holdedItem != null && InputFunctions.GetLMB())
+        if (_holdedItem != null)
         {
             _holdedItem.Use(usable);
         }
