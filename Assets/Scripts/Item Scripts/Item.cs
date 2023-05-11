@@ -6,14 +6,9 @@ public class Item : MonoBehaviour
 
     public string nameItem;
 
-    private void Awake()
+    public virtual void Awake()
     {
         _isNotTaken = true;
-    }
-
-    public virtual void Use(IUsable usable)
-    {
-        usable.CheckUsing(this);
     }
 
     public void PickUp(Transform parent)

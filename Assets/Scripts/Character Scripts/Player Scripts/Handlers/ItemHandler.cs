@@ -1,11 +1,11 @@
-using InputData;
 using UnityEngine;
 
 public class ItemHandler : MonoBehaviour
 {
-    [SerializeField] private Item _holdedItem;
     [SerializeField] private TurnHandler _turnHandler;
+    [SerializeField] private IUsable _usableObj;
 
+    public Item holdedItem;
     public Item selectedItem;
 
     private int _itemSortingOrder;
@@ -22,19 +22,11 @@ public class ItemHandler : MonoBehaviour
         Carrying();
     }
 
-    private void Carrying()
+    public void UseItem()
     {
-        if (_holdedItem != null)
+        if (CheckUsing() && holdedItem.TryGetComponent(out UsedItem usedItem))
         {
-            _holdedItem.transform.localPosition = _turnHandler.itemPlace;
-        }
-    }
-
-    public void UseAnObject(IUsable usable)
-    {
-        if (_holdedItem != null)
-        {
-            _holdedItem.Use(usable);
+            usedItem.Use(_usableObj);
         }
     }
 
@@ -44,10 +36,10 @@ public class ItemHandler : MonoBehaviour
         {
             selectedItem.PickUp(transform);
 
-            _holdedItem = selectedItem;
+            holdedItem = selectedItem;
 
-            _oldItemSortingOrder = _holdedItem.GetComponent<SpriteRenderer>().sortingOrder;
-            _holdedItem.GetComponent<SpriteRenderer>().sortingOrder = _itemSortingOrder;
+            _oldItemSortingOrder = holdedItem.GetComponent<SpriteRenderer>().sortingOrder;
+            holdedItem.GetComponent<SpriteRenderer>().sortingOrder = _itemSortingOrder;
 
             selectedItem = null;
         }
@@ -55,29 +47,59 @@ public class ItemHandler : MonoBehaviour
 
     public void PutItem()
     {
-        if (_holdedItem != null)
+        if (holdedItem != null)
         {
-            _holdedItem.GetComponent<SpriteRenderer>().sortingOrder = _oldItemSortingOrder;
+            holdedItem.GetComponent<SpriteRenderer>().sortingOrder = _oldItemSortingOrder;
 
-            _holdedItem.Put();
+            holdedItem.Put();
 
-            _holdedItem = null;
+            holdedItem = null;
+        }
+    }
+
+    private void Carrying()
+    {
+        //if (holdedItem != null)
+        //{
+        //    holdedItem.transform.localPosition = _turnHandler.itemPlace;
+        //}
+    }
+
+    private bool CheckUsing()
+    {
+        if (holdedItem != null && _usableObj != null)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.TryGetComponent<Item>(out Item item))
+        if (collision.TryGetComponent(out Item item))
         {
             selectedItem = item;
+        }
+
+        if (collision.TryGetComponent(out IUsable usable))
+        {
+            _usableObj = usable;
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.TryGetComponent<Item>(out Item item))
+        if (collision.TryGetComponent(out Item item))
         {
             selectedItem = null;
+        }
+
+        if (collision.TryGetComponent(out IUsable usable))
+        {
+            _usableObj = null;
         }
     }
 }

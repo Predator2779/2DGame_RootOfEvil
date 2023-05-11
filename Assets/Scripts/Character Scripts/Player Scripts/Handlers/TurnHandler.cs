@@ -5,42 +5,92 @@ using UnityEngine;
 public class TurnHandler : MonoBehaviour
 {
     [SerializeField] private Transform _skin;
-    
-    public Vector2 itemPlace;
+    [SerializeField] private ItemHandler _itemHandler;
+
+    public enum playerSides { Front, Back, Left, Right }
+    public playerSides currentSide = playerSides.Front;
 
     private Character _player;
+    private Item _item;
 
     private void Start()
     {
         _player = GetComponent<Character>();
-
-        HorizontalTurnPlayer();
+        _itemHandler = GetComponent<ItemHandler>();
     }
 
     private void Update()
     {
-        HorizontalTurnPlayer();
+        RotatePlayer();
+
+        if (CheckExistingItem(out Item _item))
+        {
+            VerticalTurnObj(_item.transform);
+            HorizontalTurnObj(_item.transform);
+        }
     }
 
-    private void HorizontalTurnPlayer()
+    private bool CheckExistingItem(out Item item)
     {
-        var HorizontalAxis = InputFunctions.GetHorizontallAxis();
-
-        if (HorizontalAxis < 0)
+        if (_itemHandler.holdedItem != null)
         {
-            _player.RotateByAngle(_skin, 0);
+            item = _itemHandler.holdedItem;
 
-            itemPlace = GlobalConstants.ItemPositionLeft;
-        }
-        else if (HorizontalAxis > 0)
-        {
-            _player.RotateByAngle(_skin, 180f);
-
-            itemPlace = GlobalConstants.ItemPositionRight;
+            return true;
         }
         else
         {
-            itemPlace = GlobalConstants.ItemPositionCenter;
+            item = null;
+
+            return false;
         }
+    }
+
+    private void VerticalTurnObj(Transform obj)
+    {
+        if (currentSide == playerSides.Front)
+        {
+            obj.localPosition = GlobalConstants.ItemPositionCenter;
+        }
+
+        if (currentSide == playerSides.Back)
+        {
+            obj.localPosition = GlobalConstants.ItemPositionCenter;
+        }
+    }
+
+    private void HorizontalTurnObj(Transform obj)
+    {
+        if (currentSide == playerSides.Left)
+        {
+            RotateObj(obj, 180f);//
+
+            obj.localPosition = GlobalConstants.ItemPositionLeft;
+        }
+
+        if (currentSide == playerSides.Right)
+        {
+            RotateObj(obj, 0);//
+
+            obj.localPosition = GlobalConstants.ItemPositionRight;
+        }
+    }
+
+    private void RotatePlayer()//
+    {
+        if (currentSide == playerSides.Left)
+        {
+            RotateObj(_skin, 0);
+        }
+
+        if (currentSide == playerSides.Right)
+        {
+            RotateObj(_skin, 180f);
+        }
+    }
+
+    private void RotateObj(Transform obj, float angle)
+    {
+        _player.RotateByAngle(obj, angle);
     }
 }

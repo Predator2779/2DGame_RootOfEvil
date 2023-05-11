@@ -11,6 +11,7 @@ namespace Core.Death
         [SerializeField] private Health.PlayerHealth playerHealth;
         [SerializeField] private string nameScene;
         [SerializeField] private LoadScenes _loadScene;
+
         private void Start()
         {
             playerHealth.SetMaxHealth(maxHealth);

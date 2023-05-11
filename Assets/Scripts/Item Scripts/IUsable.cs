@@ -1,6 +1,6 @@
 public interface IUsable
 {
-    public void CheckUsing();
+    public void PerformAction();
 
-    public void CheckUsing(Item item);
+    public void ApplyItem(UsedItem item);
 }

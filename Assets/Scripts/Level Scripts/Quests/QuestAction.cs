@@ -4,27 +4,40 @@ public class QuestAction : MonoBehaviour, IUsable
 {
     [SerializeField] private Questor _questor;
     [SerializeField] private Sprite _newSprite;
+    [SerializeField] private bool _isUsable = false;
 
-    private string _questItem;
+    private string _nameQuestItem;
 
     private void Awake()
     {
-        _questItem = _questor.questItem.nameItem;
+        _nameQuestItem = _questor.questItem.nameItem;
     }
 
-    public void CheckUsing()
+    public void PerformAction()
     {
-        if (_questItem == null)
+        if (!_isUsable)
         {
             CompleteAction();
         }
     }
     
-    public void CheckUsing(Item item)
+    public void ApplyItem(UsedItem item)
     {
-        if (_questItem != null && item.nameItem == _questItem)
+        if (_isUsable && CheckItem(item))
         {
             CompleteAction();
+        }
+    }
+
+    private bool CheckItem(Item item)
+    {
+        if (_nameQuestItem != null && item.nameItem == _nameQuestItem)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 
@@ -38,6 +51,14 @@ public class QuestAction : MonoBehaviour, IUsable
             {
                 GetComponent<SpriteRenderer>().sprite = _newSprite;
             }
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.TryGetComponent(out Item item) && CheckItem(item))
+        {
+            PerformAction();
         }
     }
 }

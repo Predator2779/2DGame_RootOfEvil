@@ -70,10 +70,7 @@ public class Questor : MonoBehaviour
             return;
         }
 
-        if (
-            _evilLevel.GetCurrentEvilLevel() <= _evilLevelQuestAvailability
-            && !questIsDone
-            && _currentState == QuestorStates.Greeting)
+        if (IsGivingQuest())
         {
             _currentState = QuestorStates.GiveQuest;
         }
@@ -100,6 +97,20 @@ public class Questor : MonoBehaviour
                 break;
             default:
                 break;
+        }
+    }
+
+    private bool IsGivingQuest()
+    {
+        if (_evilLevel.GetCurrentEvilLevel() <= _evilLevelQuestAvailability
+            && !questIsDone
+            && _currentState == QuestorStates.Greeting)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 

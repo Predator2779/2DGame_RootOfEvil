@@ -1,5 +1,4 @@
 using UnityEngine;
-using Core.Death;
 using UnityEngine.UI;
 using Image = UnityEngine.UI.Image;
 
@@ -10,6 +9,7 @@ namespace Core.Health
         [SerializeField] private Slider slider;
         [SerializeField] private Gradient gradient;
         [SerializeField] private Image fill;
+
         public void SetMaxHealth(int health)
         {
             slider.maxValue = health;
