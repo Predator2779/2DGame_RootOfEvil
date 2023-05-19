@@ -41,10 +41,8 @@ GameObject:
   m_Component:
   - component: {fileID: 9180012756118675346}
   - component: {fileID: 5941820948003239843}
-  - component: {fileID: 4794189757529145452}
   - component: {fileID: 3626161299133826476}
   - component: {fileID: 5613392943448401838}
-  - component: {fileID: 6906645392009920481}
   m_Layer: 0
   m_Name: StrongEnemy
   m_TagString: Untagged
@@ -121,20 +119,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &4794189757529145452
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1957835407003537223}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: eb2ce3b30c394c9d81d15d43d613ac22, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  <maxHealth>k__BackingField: 150
-  enemyHealth: {fileID: 4578417193994243694}
 --- !u!61 &3626161299133826476
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -187,26 +171,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 3.4022574, y: 3.5314322}
   m_EdgeRadius: 0
---- !u!114 &6906645392009920481
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1957835407003537223}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e1a40fe0bec639478268bdf44bb6646, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  attackDamage: 20
-  attackRadius: 20
-  attackPosition: {fileID: 2654231304262781177}
-  levelOfEvil: 5
-  character: {fileID: 0}
-  attackDistance: 0
-  attackDelay: 2
-  enemy: {fileID: 1957835407003537223}
 --- !u!1001 &7539310581259179367
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -320,17 +284,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4c73f0a617ca46644ba82953832c8e13, type: 3}
---- !u!114 &4578417193994243694 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6280495258071292681, guid: 4c73f0a617ca46644ba82953832c8e13, type: 3}
-  m_PrefabInstance: {fileID: 7539310581259179367}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 50bfcc7f1afdc6041b43f3eb592bcb16, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &4915197296843669718 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3213119189784974769, guid: 4c73f0a617ca46644ba82953832c8e13, type: 3}

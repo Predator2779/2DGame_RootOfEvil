@@ -113,7 +113,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4968303310900559088, guid: b5a116bb834c52349b6b48fc7935dc37, type: 3}
       propertyPath: m_Name
-      value: BossEnemy
+      value: BossEnemy Variant
       objectReference: {fileID: 0}
     - target: {fileID: 4968303310900559088, guid: b5a116bb834c52349b6b48fc7935dc37, type: 3}
       propertyPath: m_IsActive
@@ -157,34 +157,5 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: -3136089770575082454, guid: b5a116bb834c52349b6b48fc7935dc37, type: 3}
+    - {fileID: 2112530496799405019, guid: b5a116bb834c52349b6b48fc7935dc37, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: b5a116bb834c52349b6b48fc7935dc37, type: 3}
---- !u!1 &4618123161252779378 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4968303310900559088, guid: b5a116bb834c52349b6b48fc7935dc37, type: 3}
-  m_PrefabInstance: {fileID: 352453974099896706}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &604721087
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4618123161252779378}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e1a40fe0bec639478268bdf44bb6646, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  attackDamage: 50
-  attackRadius: 44.5
-  attackPosition: {fileID: 9216835642528830156}
-  levelOfEvil: 5
-  character: {fileID: 0}
-  attackDistance: 0
-  attackDelay: 5
-  enemy: {fileID: 4618123161252779378}
---- !u!4 &9216835642528830156 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8866721434738703182, guid: b5a116bb834c52349b6b48fc7935dc37, type: 3}
-  m_PrefabInstance: {fileID: 352453974099896706}
-  m_PrefabAsset: {fileID: 0}
