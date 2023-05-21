@@ -12,11 +12,14 @@ public class InputHandler : MonoBehaviour
 
     private Warrior _player;
     private TurnHandler _turnHandler;
+    private ItemHandler _itemHandler;
 
     private void Awake()
     {
         _player = GetComponent<Warrior>();
         _turnHandler = GetComponent<TurnHandler>();
+        _itemHandler = GetComponent<ItemHandler>();
+
     }
 
     private void Update()
@@ -39,7 +42,7 @@ public class InputHandler : MonoBehaviour
         {
             _player.MoveTo(GetMovementVector());
 
-            LastPlayerSide();
+            PlayerSideChanger();
 
             audioHandler.TakeStep();
         }
@@ -55,10 +58,22 @@ public class InputHandler : MonoBehaviour
     {
         if (InputFunctions.GetKeyE())
         {
-            _player.PutItem();
+            PutItem();
 
-            _player.PickUpItem();
+            PickUpItem();
         }
+    }
+
+    private void PutItem()
+    {
+        _itemHandler.PutItem();
+    } 
+    
+    private void PickUpItem()
+    {
+        _itemHandler.PickUpItem();
+
+        SetPlayerSide(GetLastPlayerSide());
     }
 
     private void GetLMB_Up()
@@ -81,24 +96,34 @@ public class InputHandler : MonoBehaviour
         }
     }
 
-    private void LastPlayerSide()
+    private TurnHandler.playerSides GetLastPlayerSide()
+    {
+       return _turnHandler.currentSide;
+    }
+
+    private void PlayerSideChanger()
     {
         if (_verticalAxis < 0)
         {
-            _turnHandler.currentSide = TurnHandler.playerSides.Front;
+            SetPlayerSide(TurnHandler.playerSides.Front);
         }
         if (_verticalAxis > 0)
         {
-            _turnHandler.currentSide = TurnHandler.playerSides.Back;
+            SetPlayerSide(TurnHandler.playerSides.Back);
         }
         if (_horizontalAxis < 0)
         {
-            _turnHandler.currentSide = TurnHandler.playerSides.Left;
+            SetPlayerSide(TurnHandler.playerSides.Left);
         }
         if (_horizontalAxis > 0)
         {
-            _turnHandler.currentSide = TurnHandler.playerSides.Right;
+            SetPlayerSide(TurnHandler.playerSides.Right);
         }
+    }
+
+    private void SetPlayerSide(TurnHandler.playerSides side)
+    {
+        _turnHandler.SetPlayerSide(side);
     }
 
     private void SetAxes()

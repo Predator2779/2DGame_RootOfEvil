@@ -4,8 +4,9 @@ using UnityEngine;
 public class TurnHandler : MonoBehaviour
 {
     [Header("Components:")]
-    [SerializeField] private Transform _skin;
     [SerializeField] private ItemHandler _itemHandler;
+    [SerializeField] private Transform _playerSprite;
+    [SerializeField] private Transform _playerTrigger;
 
     public enum playerSides { Front, Back, Left, Right }
 
@@ -19,25 +20,43 @@ public class TurnHandler : MonoBehaviour
         _player = GetComponent<Character>();
         _itemHandler = GetComponent<ItemHandler>();
 
-        currentSide = playerSides.Front;
+        SetPlayerSide(playerSides.Front);
     }
 
-    private void Update()
+    public void SetPlayerSide(playerSides side)
     {
-        RotatePlayer();
+        currentSide = side;
 
-        if (CheckExistingItem(out Item _item))
+        switch (currentSide)
         {
-            VerticalTurnObj(_item.transform);
-            HorizontalTurnObj(_item.transform);
+            case playerSides.Back:
+                RotateObj(_playerSprite, 0);
+                ItemLeftPos();
+                _playerTrigger.localPosition = GlobalConstants.PlayerTriggerPosBack;
+                break;
+            case playerSides.Left:
+                RotateObj(_playerSprite, 0);
+                ItemLeftPos();
+                _playerTrigger.localPosition = GlobalConstants.PlayerTriggerPosLeft;
+                break;
+            case playerSides.Right:
+                RotateObj(_playerSprite, 180f);
+                ItemRightPos();
+                _playerTrigger.localPosition = GlobalConstants.PlayerTriggerPosRight;
+                break;
+            default:
+                RotateObj(_playerSprite, 0);
+                ItemRightPos();
+                _playerTrigger.localPosition = GlobalConstants.PlayerTriggerPosFront;
+                break;
         }
     }
 
-    private bool CheckExistingItem(out Item item)
+    private bool CheckExistingItem(out Transform item)
     {
-        if (_itemHandler.holdedItem != null)
+        if (_itemHandler.HoldedItem != null)
         {
-            item = _itemHandler.holdedItem;
+            item = _itemHandler.HoldedItem.transform;
 
             return true;
         }
@@ -49,46 +68,21 @@ public class TurnHandler : MonoBehaviour
         }
     }
 
-    private void VerticalTurnObj(Transform obj)
+    private void ItemLeftPos()
     {
-        if (currentSide == playerSides.Front)
+        if (CheckExistingItem(out Transform item))
         {
-            obj.localPosition = GlobalConstants.ItemPositionCenter;
-        }
-
-        if (currentSide == playerSides.Back)
-        {
-            obj.localPosition = GlobalConstants.ItemPositionCenter;
+            RotateObj(item.transform, 0);
+            item.transform.localPosition = GlobalConstants.ItemPositionLeft;
         }
     }
 
-    private void HorizontalTurnObj(Transform obj)
+    private void ItemRightPos()
     {
-        if (currentSide == playerSides.Left)
+        if (CheckExistingItem(out Transform item))
         {
-            RotateObj(obj, 180f);//
-
-            obj.localPosition = GlobalConstants.ItemPositionLeft;
-        }
-
-        if (currentSide == playerSides.Right)
-        {
-            RotateObj(obj, 0);//
-
-            obj.localPosition = GlobalConstants.ItemPositionRight;
-        }
-    }
-
-    private void RotatePlayer()//
-    {
-        if (currentSide == playerSides.Left)
-        {
-            RotateObj(_skin, 0);
-        }
-
-        if (currentSide == playerSides.Right)
-        {
-            RotateObj(_skin, 180f);
+            RotateObj(item.transform, 180f);
+            item.transform.localPosition = GlobalConstants.ItemPositionRight;
         }
     }
 

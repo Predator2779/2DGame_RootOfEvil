@@ -8,11 +8,6 @@ public class HealthProcessor : MonoBehaviour, IHealth, IUsable
     [SerializeField] private int _currentHitPoints;
     [SerializeField] [Min(1)] private float _coefDefense;
 
-
-    [SerializeField] private bool _isPassiveItem;
-
-    public bool isPassiveItem { get { return _isPassiveItem; } }
-
     private Health _health;
 
     private void OnEnable()
@@ -23,7 +18,7 @@ public class HealthProcessor : MonoBehaviour, IHealth, IUsable
     private void Update()
     {
         _currentHitPoints = GetCurrentHitPoints();
-        _healthBar.SetCurrentHealth(_currentHitPoints);
+        _healthBar.SetCurrentHealth(_currentHitPoints * 100 / _maxHitPoints);
     }
 
     private void Initialize()

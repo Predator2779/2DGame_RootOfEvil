@@ -6,48 +6,40 @@ public class Character : MonoBehaviour
 {
     [SerializeField][Range(0, 10)] private int _movementSpeed;
 
-    private ItemHandler _itemHandler;
+    public Item holdedItem;
+    public IUsable usableObject;
+
     private Rigidbody2D _rbody;
 
-    public virtual void Awake()
+    private void Awake()
     {
         _rbody = GetComponent<Rigidbody2D>();
-        _itemHandler = GetComponent<ItemHandler>();
     }
 
     #region Character
 
     public virtual void Use()
     {
-        UseItem(GetHoldedItem(), GetUsableObject());
+        UseItem(holdedItem, usableObject);
     }
 
     public void UseItem(Item item, IUsable usableObject)
     {
-        if (item != null && usableObject != null && item.TryGetComponent(out UsedItem usedItem))
+        if (CheckUsing(item, usableObject) && item.TryGetComponent(out UsedItem usedItem))
         {
             usedItem.Use(usableObject);
         }
     }
-
-    public Item GetHoldedItem()
+    public bool CheckUsing(Item item, IUsable usableObject)
     {
-        return _itemHandler.holdedItem;
-    }  
-    
-    public IUsable GetUsableObject()
-    {
-        return _itemHandler.usableObject;
-    }
-
-    public void PickUpItem()
-    {
-       _itemHandler.PickUpItem();
-    }
-
-    public void PutItem()
-    {
-        _itemHandler.PutItem();
+        if (item != null && usableObject != null)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     public void MoveTo(Vector2 movementDirection)

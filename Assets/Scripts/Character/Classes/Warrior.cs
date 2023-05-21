@@ -9,28 +9,28 @@ public class Warrior : Character
 
     private bool _canAttack = true;
 
-    public override void Awake()
+    public override void Use()
     {
-        base.Awake();
+        Attack();
     }
 
-    public override void Use()
+    public void Attack()
     {
         if (!_canAttack) return;
 
-        Item item = GetHoldedItem();
+        Item item = holdedItem;
 
-        if (item != null && item.TryGetComponent(out Weapon weapon))
+        if (CheckUsing(item, usableObject) && item.TryGetComponent(out Weapon weapon))
         {
             item = MultiplyDamage(weapon);
         }
 
-        UseItem(item, GetUsableObject());
+        UseItem(item, usableObject);
 
         StartCoroutine(CanAttack());
     }
 
-    public Weapon MultiplyDamage(Weapon weapon)
+    private Weapon MultiplyDamage(Weapon weapon)
     {
         weapon.DamageFactor = attackDamage;
 
