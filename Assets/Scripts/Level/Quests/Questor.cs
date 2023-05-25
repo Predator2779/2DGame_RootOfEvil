@@ -13,17 +13,12 @@ public class Questor : MonoBehaviour
     [SerializeField] private Sprite _sadNPC;
 
     [Header("EvilLevel")]
-    [SerializeField] private EvilLevel _evilLevel;///
+    [SerializeField] private EvilLevelCounter _evilLevelCounter;
 
     [Header("Dialogue")]
     [SerializeField] private Image _dialogBox;
     [SerializeField] private TextMeshProUGUI _dialogText;
     [SerializeField] private string _textGreeting = "Приветствую!";
-
-    [Header("State Questor")]
-    [SerializeField] private QuestorStates _currentState;
-    private enum QuestorStates
-    { Greeting, GiveQuest, NoDoneQuest, PassedQuest, DoneQuest };
 
     [Header("Quest")]
     [SerializeField] private Quest _currentQuest;
@@ -39,142 +34,63 @@ public class Questor : MonoBehaviour
         }
 
         _spriteRenderer.sprite = _sadNPC;
-        _currentState = QuestorStates.Greeting;
     }
 
-    public void CompleteAction()
+    public void Greeting()
     {
-        _currentQuest.countQuestAction--;
-
-        if (_currentQuest.countQuestAction <= 0)
+        if (_textGreeting != null)
         {
-            _currentQuest.countQuestAction = 0;
-
-            _currentState = QuestorStates.DoneQuest;
-        }
-    }
-
-    private void IsGivingQuest()
-    {
-        InitializeQuest(QuestAvailability());
-
-        if (_currentQuest != null)
-        {
-            _currentState = QuestorStates.GiveQuest;
-        }
-    }
-
-    private void InitializeQuest(Quest quest)
-    {
-        _currentQuest = quest;
-
-        if (_currentQuest != null && _currentQuest.additionalQuest != null)
-        {
-            _currentQuest.additionalQuest.prevQuest = _currentQuest;
-        }
-    }
-
-    private Quest QuestAvailability()
-    {
-        foreach (var quest in _quests)
-        {
-            if (quest.isActive 
-                && _evilLevel.GetCurrentEvilLevel() <= quest.evilLevelQuestAvailability)
-            {
-                return quest;
-            }
-        }
-
-        return null;
-    }
-
-    private void ChangeState(QuestorStates currentState)
-    {
-        switch (currentState)
-        {
-            case QuestorStates.Greeting:
-                Greeting();
-                break;
-            case QuestorStates.GiveQuest:
-                GiveQuest();
-                break;
-            case QuestorStates.NoDoneQuest:
-                NoDoneQuest();
-                break;
-            case QuestorStates.DoneQuest:
-                DoneQuest();
-                break;
-            default:
-                break;
-        }
-    }
-
-    private bool AdditionalQuestIsActive()
-    {
-        if (_currentQuest.additionalQuest != null && _currentQuest.additionalQuest.isActive)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
+            Dialogue(_textGreeting);
         }
     }
 
     public void Dialogue(string text)
     {
         _dialogText.text = text;
+        _dialogBox.gameObject.SetActive(true);
     }
 
-    #region States
-
-    private void Greeting()
+    public void CompleteAction()
     {
-        if (_textGreeting != null)
+        if (_currentQuest != null)
         {
-            Dialogue(_textGreeting);
-        }
-
-        IsGivingQuest();
-    }
-
-    private void GiveQuest()
-    {
-        EventHandler.OnQuestStart?.Invoke(_currentQuest.questName);
-
-        var item = _currentQuest.questItem;
-
-        Dialogue(_currentQuest.textGivingQuest + $"\n[{item.nameItem}{_currentQuest.endingPluralWord}: {_currentQuest.countQuestAction}]");
-
-        _currentState = QuestorStates.NoDoneQuest;
-    }
-
-    private void NoDoneQuest()
-    {
-        var item = _currentQuest.questItem;
-
-        Dialogue(
-            _currentQuest.textNoDoneQuest +
-            $"\n[{item.nameItem}{_currentQuest.endingPluralWord}: {_currentQuest.countQuestAction}]");
-    }
-
-    private void DoneQuest()
-    {
-        if (!AdditionalQuestIsActive())
-        {
-            EventHandler.OnQuestPassed?.Invoke();
-
-            _spriteRenderer.sprite = _smileNPC;
-            _dialogText.text = _currentQuest.textDoneQuest;
-
-            _currentQuest.isActive = false;
-
-            _currentState = QuestorStates.Greeting;
-            _currentQuest = null;
+            _currentQuest.CompleteAction();
         }
     }
 
-    #endregion
+    public void CheckQuest()
+    {
+        if (_currentQuest != null)
+        {
+            _currentQuest.CheckQuest();
+        }
+        else
+        {
+            Greeting();
+
+            InitializeQuest();
+        }
+    }
+
+    public void InitializeQuest()
+    {
+        foreach (var quest in _quests)
+        {
+            if (quest.QuestAvailability(this, _evilLevelCounter.GetCurrentEvilLevel()))
+            {
+                _currentQuest = quest;
+            }
+        }
+    }
+
+    public void PassedQuest()
+    {
+        EventHandler.OnQuestPassed?.Invoke();
+
+        _spriteRenderer.sprite = _smileNPC;
+
+        _currentQuest = null;
+    }
 
     #region Trigger
 
@@ -182,9 +98,7 @@ public class Questor : MonoBehaviour
     {
         if (collision.transform.TryGetComponent(out InputHandler inputHandler))
         {
-            ChangeState(_currentState);
-
-            _dialogBox.gameObject.SetActive(true);
+            CheckQuest();
         }
     }
 

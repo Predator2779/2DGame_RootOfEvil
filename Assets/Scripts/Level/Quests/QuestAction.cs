@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class QuestAction : MonoBehaviour, IUsable
 {
-    [SerializeField] private Quest _quest;
+    [SerializeField] private ItemQuest _quest;
     [SerializeField] private Questor _questor;
     [SerializeField] private string _nameQuestItem;
     [SerializeField] private Sprite _newSprite;
@@ -62,14 +62,11 @@ public class QuestAction : MonoBehaviour, IUsable
 
     private void CompleteAction()
     {
-        if (_quest.isActive)
-        {
-            _questor.CompleteAction();
+        _questor.CompleteAction();
 
-            if (_newSprite != null)
-            {
-                GetComponent<SpriteRenderer>().sprite = _newSprite;
-            }
+        if (_newSprite != null)
+        {
+            GetComponent<SpriteRenderer>().sprite = _newSprite;
         }
     }
 
