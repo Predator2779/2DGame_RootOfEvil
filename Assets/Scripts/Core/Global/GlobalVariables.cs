@@ -43,10 +43,10 @@ namespace GlobalVariables
         public static Vector2 ItemPositionCenter = new Vector2(0, -1.2f);
         public static Vector2 ItemPositionRight = new Vector2(4f, -1.2f); 
         
-        public static Vector2 PlayerTriggerPosFront = new Vector2(0, -6f);
-        public static Vector2 PlayerTriggerPosBack = new Vector2(0, 6f);
-        public static Vector2 PlayerTriggerPosLeft = new Vector2(-6f, 0f);
-        public static Vector2 PlayerTriggerPosRight = new Vector2(6f, 0);
+        public static Vector2 PlayerTriggerPosFront = new Vector2(0, -3f);
+        public static Vector2 PlayerTriggerPosBack = new Vector2(0, 3f);
+        public static Vector2 PlayerTriggerPosLeft = new Vector2(-3f, 0f);
+        public static Vector2 PlayerTriggerPosRight = new Vector2(3f, 0);
 
         #endregion
     }

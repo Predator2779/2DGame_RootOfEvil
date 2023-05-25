@@ -2,32 +2,49 @@ using UnityEngine;
 
 public class QuestAction : MonoBehaviour, IUsable
 {
+    [SerializeField] private Quest _quest;
     [SerializeField] private Questor _questor;
+    [SerializeField] private string _nameQuestItem;
     [SerializeField] private Sprite _newSprite;
-    [SerializeField] private bool _isPassiveItem;
+    [SerializeField] private bool _isPassiveItem = true;
+    [SerializeField] private bool _isReusable = false;
 
     public bool isPassiveItem { get { return _isPassiveItem; } }
 
-    private string _nameQuestItem;
-
-    private void Awake()
+    private void Start()
     {
-        _nameQuestItem = _questor.questItem.nameItem;
+        EventHandler.OnQuestStart.AddListener(StartQuest);
+    }
+
+    public void StartQuest(string questName)
+    {
+        if (questName == _quest.questName)
+        {
+            _nameQuestItem = _quest.questItem.nameItem;
+            _isPassiveItem = true;
+        }
     }
 
     public void PassiveAction()
     {
-        if (_isPassiveItem)
+        if (isPassiveItem)
         {
             CompleteAction();
+
+            gameObject.SetActive(false);
         }
     }
     
     public void ResponseAction(UsedItem item)
     {
-        if (!_isPassiveItem && CheckItem(item))
+        if (!isPassiveItem && CheckItem(item))
         {
             CompleteAction();
+
+            if (!_isReusable)
+            {
+                gameObject.SetActive(false);
+            }
         }
     }
 
@@ -45,7 +62,7 @@ public class QuestAction : MonoBehaviour, IUsable
 
     private void CompleteAction()
     {
-        if (!_questor.questIsDone)
+        if (_quest.isActive)
         {
             _questor.CompleteAction();
 
