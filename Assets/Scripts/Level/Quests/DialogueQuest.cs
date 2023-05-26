@@ -58,7 +58,7 @@ public class DialogueQuest : Quest
         int index = Random.Range(0, replicas.Length);
         string replica = replicas[index];
 
-        replicas = RemoveIndex(replicas, index);
+        RemoveIndex(ref replicas, index);
 
         return replica;
     } 
@@ -67,28 +67,22 @@ public class DialogueQuest : Quest
     {
         string replica = replicas[_currentReplicaIndex];
 
-        replicas = RemoveIndex(replicas, _currentReplicaIndex);
+        RemoveIndex(ref replicas, _currentReplicaIndex);
 
         return replica;
     }
 
-    private string[] RemoveIndex(string[] arr, int index)
+    private void RemoveIndex(ref string[] arr, int index)
     {
         for (int i = index + 1; i < arr.Length; i++)
-        {
             arr[i - 1] = arr[i];
-        }
-
-        arr[arr.Length - 1] = null;
 
         string[] newArr = new string[arr.Length - 1];
 
         for (int i = 0; i < newArr.Length; i++)
-        {
             newArr[i] = arr[i];
-        }
 
-        return arr;
+        arr = newArr;
     }
 
     #endregion

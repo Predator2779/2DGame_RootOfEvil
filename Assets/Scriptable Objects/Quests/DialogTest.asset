@@ -12,12 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6911ba27f45371e40b8608fc1329d1f7, type: 3}
   m_Name: DialogTest
   m_EditorClassIdentifier: 
-  isActive: 0
+  isActive: 1
   questName: Test1
   description: test
-  randomSequence: 1
+  randomSequence: 0
   replicas:
-  - 
-  - 
-  - 
-  - 
+  - 4
