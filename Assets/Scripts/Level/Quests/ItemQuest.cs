@@ -6,8 +6,6 @@ public class ItemQuest : Quest
     #region Vars
 
     [Header("Quest Options")]
-    public ItemQuest prevQuest;
-    public ItemQuest additionalQuest;
     public int evilLevelQuestAvailability;
     public int countQuestAction;
 
@@ -76,6 +74,19 @@ public class ItemQuest : Quest
         }
     }
 
+    public override void PassedQuest()
+    {
+        if (prevQuest != null)
+        {
+            prevQuest.CompleteAction();
+        }
+
+        questor.Dialogue(textDoneQuest);
+        questor.PassedQuest();
+
+        isActive = false;
+    }
+
     #endregion
 
     #region Quest
@@ -123,10 +134,7 @@ public class ItemQuest : Quest
     {
         if (!AdditionalQuestIsActive())
         {
-            questor.Dialogue(textDoneQuest);
-            questor.PassedQuest();
-
-            isActive = false;
+            PassedQuest();
         }
     }
 

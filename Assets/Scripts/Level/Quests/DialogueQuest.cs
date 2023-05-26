@@ -24,28 +24,36 @@ public class DialogueQuest : Quest
 
     public override void CompleteAction()
     {
-        if (replicas.Length == 0)
+        if (replicas.Length <= 0)
         {
-            isActive = false;
+            PassedQuest();
         }
     }
 
     public override void CheckQuest()
     {
-        if (replicas.Length != 0)
+        CompleteAction();
+
+        if (randomSequence)
         {
-            if (randomSequence)
-            {
-                questor.Dialogue(GetRandomReplica());
-            }
-            else
-            {
-                questor.Dialogue(GetSequenceReplica());
-            }
+            questor.Dialogue(GetRandomReplica());
         }
         else
         {
-            isActive = false;
+            questor.Dialogue(GetSequenceReplica());
+        }
+    }
+
+    public override void PassedQuest()
+    {
+        questor.Dialogue("LoL");///
+        questor.PassedQuest();
+
+        isActive = false;
+
+        if (prevQuest != null)
+        {
+            prevQuest.CompleteAction();
         }
     }
 
