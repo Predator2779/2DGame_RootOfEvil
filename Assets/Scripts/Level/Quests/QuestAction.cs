@@ -3,22 +3,22 @@ using UnityEngine;
 public class QuestAction : MonoBehaviour, IUsable
 {
     [SerializeField] private ItemQuest _quest;
-    [SerializeField] private Questor _questor;
-    [SerializeField] private string _nameQuestItem;
     [SerializeField] private Sprite _newSprite;
     [SerializeField] private bool _isPassiveItem = true;
     [SerializeField] private bool _isReusable = false;
 
     public bool isPassiveItem { get { return _isPassiveItem; } }
+    
+    private string _nameQuestItem;
 
     private void Start()
     {
-        EventHandler.OnQuestStart.AddListener(StartQuest);
+        EventHandler.OnQuestStart.AddListener(CheckStartingQuest);
     }
 
-    public void StartQuest(string questName)
+    public void CheckStartingQuest(Quest quest)
     {
-        if (questName == _quest.questName)
+        if (quest == _quest)
         {
             _nameQuestItem = _quest.questItem.nameItem;
             _isPassiveItem = true;
@@ -60,9 +60,9 @@ public class QuestAction : MonoBehaviour, IUsable
         }
     }
 
-    private void CompleteAction()
+    public void CompleteAction()
     {
-        _questor.CompleteAction();
+        _quest.CompleteAction();
 
         if (_newSprite != null)
         {

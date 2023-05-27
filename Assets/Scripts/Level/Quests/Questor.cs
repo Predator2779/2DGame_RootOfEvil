@@ -21,13 +21,13 @@ public class Questor : MonoBehaviour
     [SerializeField] private string _textGreeting = "Приветствую!";
 
     [Header("Quest")]
-    [SerializeField] private Quest _currentQuest;
+    [SerializeField] private Quest _optionalQuest;//non
     [SerializeField] private Quest[] _quests;
-
-    public Quest CurrentQuest { get { return _currentQuest; } }
 
     private void Start()
     {
+        EventHandler.OnOptionalQuest.AddListener(SetOptionalQuest);
+
         if (_spriteRenderer == null)
         {
             _spriteRenderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
@@ -50,46 +50,47 @@ public class Questor : MonoBehaviour
         _dialogBox.gameObject.SetActive(true);
     }
 
-    public void CompleteAction()
+    public void CompleteAction(Quest quest)
     {
-        if (_currentQuest != null)
-        {
-            _currentQuest.CompleteAction();
-        }
+        quest.CompleteAction();
     }
 
     public void CheckQuest()
     {
-        if (_currentQuest != null)
+        if (_optionalQuest != null)
         {
-            _currentQuest.CheckQuest();
-        }
-        else
-        {
-            Greeting();
+            _optionalQuest.CheckQuest();
 
-            InitializeQuest();
+            return;
         }
-    }
 
-    public void InitializeQuest()
-    {
         foreach (var quest in _quests)
         {
             if (quest.QuestAvailability(this, _evilLevelCounter.GetCurrentEvilLevel()))
             {
-                _currentQuest = quest;
+                quest.CheckQuest();
+
+                return;
             }
         }
+
+        Greeting();
     }
 
     public void PassedQuest()
     {
-        EventHandler.OnQuestPassed?.Invoke();
-
         _spriteRenderer.sprite = _smileNPC;
+    }
 
-        _currentQuest = null;
+    public void SetOptionalQuest(Quest optionalQuest)
+    {
+        foreach (var quest in _quests)
+        {
+            if (quest == optionalQuest)
+            {
+                _optionalQuest = optionalQuest;
+            }
+        }
     }
 
     #region Trigger

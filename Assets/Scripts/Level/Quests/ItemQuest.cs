@@ -6,7 +6,6 @@ public class ItemQuest : Quest
     #region Vars
 
     [Header("Quest Options")]
-    public int evilLevelQuestAvailability;
     public int countQuestAction;
 
     [Header("Special Replicas")]
@@ -18,11 +17,6 @@ public class ItemQuest : Quest
     public Item questItem;
     public string endingPluralWord;
 
-    [Header("State Questor")]
-    [SerializeField] private QuestorStates _currentState;
-    private enum QuestorStates
-    { GiveQuest, NoDoneQuest, DoneQuest };
-
     #endregion
 
     #region Base Methods
@@ -31,12 +25,7 @@ public class ItemQuest : Quest
     {
         this.questor = questor;
 
-        if (isActive && evilLevel <= evilLevelQuestAvailability)
-        {
-            _currentState = QuestorStates.GiveQuest;
-
-            return true;
-        }
+        if (isAvailable && evilLevel <= availabilityLevel) { return true; }
         else { return false; }
     }
 
@@ -48,59 +37,40 @@ public class ItemQuest : Quest
         {
             countQuestAction = 0;
 
-            if (!AdditionalQuestIsActive())
-            {
-                _currentState = QuestorStates.DoneQuest;
-            }
+            //if (!OptionalQuestIsAvailable())///to progressing
+            //{
+            //    currentState = QuestStates.Passed;
+            //}
         }
     }
 
     public override void CheckQuest()
     {
-        switch (_currentState)
+        switch (currentState)
         {
-            case QuestorStates.GiveQuest:
-                GiveQuest();
+            case QuestStates.NotStarted:
+                StartQuest();
                 break;
-            case QuestorStates.NoDoneQuest:
-                NoDoneQuest();
+            case QuestStates.Progressing:
+                ProgressingQuest();
                 break;
-            case QuestorStates.DoneQuest:
-                DoneQuest();
+            case QuestStates.Passed:
+                PassedQuest();
                 break;
             default:
-                DefaultState();
                 break;
         }
-    }
-
-    public override void PassedQuest()
-    {
-        if (prevQuest != null)
-        {
-            prevQuest.CompleteAction();
-        }
-
-        questor.Dialogue(textDoneQuest);
-        questor.PassedQuest();
-
-        isActive = false;
     }
 
     #endregion
 
     #region Quest
 
-    private void DefaultState()
+    private bool OptionalQuestIsAvailable()
     {
-        questor.Greeting();
-    }
-
-    private bool AdditionalQuestIsActive()
-    {
-        if (additionalQuest != null && additionalQuest.isActive)
+        if (optionalQuest != null && optionalQuest.isAvailable)
         {
-            additionalQuest.prevQuest = this;
+            optionalQuest.parentQuest = this;
 
             return true;
         }
@@ -110,32 +80,45 @@ public class ItemQuest : Quest
         }
     }
 
-    private void GiveQuest()
+    public void StartQuest()
     {
-        EventHandler.OnQuestStart?.Invoke(questName);
+        EventHandler.OnQuestStart?.Invoke(this);
 
-        var item = questItem;
+        if (OptionalQuestIsAvailable())
+        {
+            EventHandler.OnOptionalQuest?.Invoke(optionalQuest);
+        }
 
-        questor.Dialogue(textGivingQuest + $"\n[{item.nameItem}{endingPluralWord}: {countQuestAction}]");
+        questor.Dialogue(textGivingQuest + $"\n[{questItem.nameItem}{endingPluralWord}: {countQuestAction}]");
 
-        _currentState = QuestorStates.NoDoneQuest;
+        currentState = QuestStates.Progressing;
     }
 
-    private void NoDoneQuest()
+    public void ProgressingQuest()
     {
-        var item = questItem;
-
         questor.Dialogue(
             textNoDoneQuest +
-            $"\n[{item.nameItem}{endingPluralWord}: {countQuestAction}]");
+            $"\n[{questItem.nameItem}{endingPluralWord}: {countQuestAction}]");
+
+        if (!OptionalQuestIsAvailable() && countQuestAction <= 0)
+        {
+            currentState = QuestStates.Passed;
+        }
     }
 
-    private void DoneQuest()
+    public override void PassedQuest()
     {
-        if (!AdditionalQuestIsActive())
+        if (parentQuest != null)
         {
-            PassedQuest();
+            parentQuest.CompleteAction();
         }
+
+        questor.Dialogue(textDoneQuest);
+        questor.PassedQuest();
+
+        isAvailable = false;
+
+        EventHandler.OnQuestPassed?.Invoke();
     }
 
     #endregion

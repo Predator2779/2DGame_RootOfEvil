@@ -19,21 +19,12 @@ public class DialogueQuest : Quest
     {
         this.questor = questor;
 
-        return true;
+        if (isAvailable && evilLevel <= availabilityLevel) { return true; }
+        else { return false; }
     }
 
     public override void CompleteAction()
     {
-        if (replicas.Length <= 0)
-        {
-            PassedQuest();
-        }
-    }
-
-    public override void CheckQuest()
-    {
-        CompleteAction();
-
         if (randomSequence)
         {
             questor.Dialogue(GetRandomReplica());
@@ -44,17 +35,23 @@ public class DialogueQuest : Quest
         }
     }
 
+    public override void CheckQuest()
+    {
+        if (replicas.Length > 0)
+        {
+            CompleteAction();
+        }
+        else
+        {
+            PassedQuest();
+        }
+    }
+
     public override void PassedQuest()
     {
-        questor.Dialogue("LoL");///
         questor.PassedQuest();
 
-        isActive = false;
-
-        if (prevQuest != null)
-        {
-            prevQuest.CompleteAction();
-        }
+        isAvailable = false;
     }
 
     #endregion
@@ -69,8 +66,8 @@ public class DialogueQuest : Quest
         RemoveIndex(ref replicas, index);
 
         return replica;
-    } 
-    
+    }
+
     private string GetSequenceReplica()
     {
         string replica = replicas[_currentReplicaIndex];

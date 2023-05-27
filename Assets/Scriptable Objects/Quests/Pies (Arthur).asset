@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb859147d9e851b4680f82d339418d20, type: 3}
+  m_Name: Pies (Arthur)
+  m_EditorClassIdentifier: 
+  isAvailable: 1
+  questName: Pies
+  description: PiesForGranny
+  optionalQuest: {fileID: 11400000, guid: 35d7d400bf793d842a24c05bff572527, type: 2}
+  availabilityLevel: 10
+  currentState: 2
+  countQuestAction: 0
+  textGivingQuest: "\u0424\u0438\u043D, \u043C\u043E\u0436\u0435\u0448\u044C, \u043F\u043E\u0436\u0430\u043B\u0443\u0439\u0441\u0442\u0430,
+    \u043E\u0442\u043D\u0435\u0441\u0442\u0438 \u044D\u0442\u0438 \u043F\u0438\u0440\u043E\u0436\u043A\u0438
+    \u0431\u0430\u0431\u0443\u043B\u0435 \u041C\u044D\u0433\u0433\u0438? \u041E\u0431\u044B\u0447\u043D\u043E,
+    \u044D\u0442\u043E \u0434\u0435\u043B\u0430\u0435\u0442 \u041F\u044D\u043C, \u043D\u043E
+    \u043E\u043D\u0430 \u0433\u043E\u0432\u043E\u0440\u0438\u0442, \u0447\u0442\u043E
+    \u0435\u0439 \u0441\u0442\u0440\u0430\u0448\u043D\u043E \u0438\u0434\u0442\u0438
+    \u0442\u0443\u0434\u0430. \u0411\u0443\u0434\u044C \u0442\u0430\u043A \u0434\u043E\u0431\u0440,
+    \u043F\u043E\u043C\u043E\u0433\u0438 \u0431\u0430\u0431\u0443\u043B\u0435."
+  textNoDoneQuest: "\u0422\u044B \u0432\u0435\u0434\u044C \u043E\u0442\u043D\u0435\u0441\u0451\u0448\u044C
+    \u043F\u0438\u0440\u043E\u0436\u043A\u0438 \u041C\u044D\u0433\u0433\u0438? \u041E\u043D\u0430
+    \u0443\u0436\u0435 \u0441\u0442\u0430\u0440\u0435\u043D\u044C\u043A\u0430\u044F,
+    \u0437\u0430 \u043D\u0435\u0439 \u043D\u0430\u0434\u043E \u0443\u0445\u0430\u0436\u0438\u0432\u0430\u0442\u044C."
+  textDoneQuest: "\u0422\u044B \u0441\u0434\u0435\u043B\u0430\u043B \u044D\u0442\u043E!
+    \u041F\u043E\u0437\u0434\u0440\u0430\u0432\u043B\u044F\u044E!"
+  questItem: {fileID: 6719223980420083084, guid: d1f392676f648114a814f027be141c50, type: 3}
+  endingPluralWord: 
