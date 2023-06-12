@@ -10,7 +10,7 @@ namespace InputData
             return Input.GetAxis(GlobalConstants.VerticalAxis);
         }
 
-        static public float GetHorizontallAxis()
+        static public float GetHorizontalAxis()
         {
             return Input.GetAxis(GlobalConstants.HorizontalAxis);
         }
@@ -55,9 +55,19 @@ namespace InputData
             return Input.GetMouseButtonDown(2);
         }
 
-        static public bool GetKeyE()
+        static public bool GetEscapeButton_Up()
+        {
+            return Input.GetKeyUp(KeyCode.Escape);
+        }
+
+        static public bool GetKeyE_Up()
         {
             return Input.GetKeyUp(KeyCode.E);
+        }  
+        
+        static public bool GetKeyF()
+        {
+            return Input.GetKey(KeyCode.F);
         }
     }
 }

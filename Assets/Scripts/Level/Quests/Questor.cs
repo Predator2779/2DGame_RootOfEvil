@@ -1,6 +1,7 @@
 using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
+using InputData;
 
 public class Questor : MonoBehaviour
 {
@@ -18,16 +19,17 @@ public class Questor : MonoBehaviour
     [Header("Dialogue")]
     [SerializeField] private Image _dialogBox;
     [SerializeField] private TextMeshProUGUI _dialogText;
+    [TextArea(2, 4)]
     [SerializeField] private string _textGreeting = "Приветствую!";
 
     [Header("Quest")]
     [SerializeField] private Quest _optionalQuest;//non
     [SerializeField] private Quest[] _quests;
 
+    private GameModes _gameMode;
+
     private void Start()
     {
-        EventHandler.OnOptionalQuest.AddListener(SetOptionalQuest);
-
         if (_spriteRenderer == null)
         {
             _spriteRenderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
@@ -36,48 +38,70 @@ public class Questor : MonoBehaviour
         _spriteRenderer.sprite = _sadNPC;
     }
 
+    private void OnEnable()
+    {
+        EventHandler.OnOptionalQuest.AddListener(SetOptionalQuest);
+        EventHandler.OnGameModeChanged.AddListener(ChangeGameMode);
+    }
+
+    private void OnDisable()
+    {
+        EventHandler.OnOptionalQuest.RemoveListener(SetOptionalQuest);
+        EventHandler.OnGameModeChanged.RemoveListener(ChangeGameMode);
+    }
+
+    private void ChangeGameMode(GameModes mode)
+    {
+        _gameMode = mode;
+    }
+
     public void Greeting()
     {
         if (_textGreeting != null)
         {
-            Dialogue(_textGreeting);
+            Say(_textGreeting + "\n\n[F] - поговорить.");
         }
     }
 
-    public void Dialogue(string text)
+    public void Say(string text)
     {
         _dialogText.text = text;
         _dialogBox.gameObject.SetActive(true);
     }
 
-    public void CompleteAction(Quest quest)
+    public void Dialogue()
     {
-        quest.CompleteAction();
+        if (InputFunctions.GetKeyF())
+        {
+            EventHandler.OnDialogueWindowShow?.Invoke(true);
+            EventHandler.OnShowQuests?.Invoke(_quests, this);//////////////////////////////////////
+            EventHandler.OnGameModeChanged?.Invoke(GameModes.Pause);
+        }
     }
 
-    public void CheckQuest()
-    {
-        if (_optionalQuest != null)
-        {
-            _optionalQuest.CheckQuest();
+    //public void CheckQuest()
+    //{
+    //    if (_optionalQuest != null)
+    //    {
+    //        _optionalQuest.CheckQuest();
 
-            return;
-        }
+    //        return;
+    //    }
 
-        foreach (var quest in _quests)
-        {
-            if (quest.QuestAvailability(this, _evilLevelCounter.GetCurrentEvilLevel()))
-            {
-                quest.CheckQuest();
+    //    foreach (var quest in _quests)
+    //    {
+    //        if (quest.QuestAvailability(this, _evilLevelCounter.GetCurrentEvilLevel()))
+    //        {
+    //            quest.CheckQuest();
 
-                return;
-            }
-        }
+    //            return;
+    //        }
+    //    }
 
-        Greeting();
-    }
+    //    Greeting();
+    //}
 
-    public void PassedQuest()
+    public void ChangeSprite()
     {
         _spriteRenderer.sprite = _smileNPC;
     }
@@ -97,15 +121,23 @@ public class Questor : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.transform.TryGetComponent(out InputHandler inputHandler))
+        if (_gameMode == GameModes.Playing && collision.transform.tag == "Player")
         {
-            CheckQuest();
+            Greeting();
+        }
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (_gameMode == GameModes.Playing && collision.transform.tag == "Player")
+        {
+            Dialogue();
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.transform.TryGetComponent(out InputHandler inputHandler))
+        if (_gameMode == GameModes.Playing && collision.transform.tag == "Player")
         {
             _dialogBox.gameObject.SetActive(false);
         }

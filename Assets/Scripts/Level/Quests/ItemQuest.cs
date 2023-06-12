@@ -9,8 +9,11 @@ public class ItemQuest : Quest
     public int countQuestAction;
 
     [Header("Special Replicas")]
+    [TextArea(2, 4)]
     public string textGivingQuest;
+    [TextArea(2, 4)]
     public string textNoDoneQuest;
+    [TextArea(2, 4)] 
     public string textDoneQuest;
 
     [Header("Quest Item")]
@@ -44,7 +47,7 @@ public class ItemQuest : Quest
         }
     }
 
-    public override void CheckQuest()
+    public override void CheckConditions()
     {
         switch (currentState)
         {
@@ -80,8 +83,10 @@ public class ItemQuest : Quest
         }
     }
 
-    public void StartQuest()
+    public override void StartQuest()
     {
+        this.questor = questor;//
+
         EventHandler.OnQuestStart?.Invoke(this);
 
         if (OptionalQuestIsAvailable())
@@ -89,14 +94,14 @@ public class ItemQuest : Quest
             EventHandler.OnOptionalQuest?.Invoke(optionalQuest);
         }
 
-        questor.Dialogue(textGivingQuest + $"\n[{questItem.nameItem}{endingPluralWord}: {countQuestAction}]");
+        questor.Say(textGivingQuest + $"\n[{questItem.nameItem}{endingPluralWord}: {countQuestAction}]");
 
         currentState = QuestStates.Progressing;
     }
 
     public void ProgressingQuest()
     {
-        questor.Dialogue(
+        questor.Say(
             textNoDoneQuest +
             $"\n[{questItem.nameItem}{endingPluralWord}: {countQuestAction}]");
 
@@ -113,8 +118,8 @@ public class ItemQuest : Quest
             parentQuest.CompleteAction();
         }
 
-        questor.Dialogue(textDoneQuest);
-        questor.PassedQuest();
+        questor.Say(textDoneQuest);
+        questor.ChangeSprite();
 
         isAvailable = false;
 

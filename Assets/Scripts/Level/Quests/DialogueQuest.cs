@@ -15,6 +15,11 @@ public class DialogueQuest : Quest
 
     #region Base Methods
 
+    public override void StartQuest()
+    {
+        throw new System.NotImplementedException();
+    }
+
     public override bool QuestAvailability(Questor questor, int evilLevel)
     {
         this.questor = questor;
@@ -27,15 +32,15 @@ public class DialogueQuest : Quest
     {
         if (randomSequence)
         {
-            questor.Dialogue(GetRandomReplica());
+            questor.Say(GetRandomReplica());
         }
         else
         {
-            questor.Dialogue(GetSequenceReplica());
+            questor.Say(GetSequenceReplica());
         }
     }
 
-    public override void CheckQuest()
+    public override void CheckConditions()
     {
         if (replicas.Length > 0)
         {
@@ -49,7 +54,7 @@ public class DialogueQuest : Quest
 
     public override void PassedQuest()
     {
-        questor.PassedQuest();
+        questor.ChangeSprite();
 
         isAvailable = false;
     }

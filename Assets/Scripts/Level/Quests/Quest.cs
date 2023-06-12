@@ -10,8 +10,8 @@ public abstract class Quest : ScriptableObject
 
     [Header("Quest Options")]
     [NonSerialized] public Questor questor;
-    [NonSerialized] public Quest parentQuest;
-    public Quest optionalQuest;
+    //[NonSerialized] public Quest parentQuest;
+    //public Quest optionalQuest;
     public int availabilityLevel;
 
     [Header("Quest States")]
@@ -21,6 +21,7 @@ public abstract class Quest : ScriptableObject
 
     public abstract bool QuestAvailability(Questor questor, int evilLevel);
     public abstract void CompleteAction();
-    public abstract void CheckQuest();
+    public abstract void CheckConditions();
+    public abstract void StartQuest();
     public abstract void PassedQuest();
 }
