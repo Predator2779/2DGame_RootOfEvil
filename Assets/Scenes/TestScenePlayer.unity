@@ -2914,7 +2914,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 624b4dc42be078d4ebe0c212da7edb76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _quest: {fileID: 0}
+  _quest: {fileID: 11400000, guid: 076f80884ff6d15459b525b7f035071f, type: 2}
   _newSprite: {fileID: 0}
   _isPassiveItem: 1
   _isReusable: 0
@@ -3048,6 +3048,10 @@ PrefabInstance:
     - target: {fileID: 2338704196986280785, guid: e3f8b9ce0b15ca649874363b7ff65c29, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2338704197943497300, guid: e3f8b9ce0b15ca649874363b7ff65c29, type: 3}
+      propertyPath: m_ChildForceExpandHeight
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2338704197943497301, guid: e3f8b9ce0b15ca649874363b7ff65c29, type: 3}
       propertyPath: m_SizeDelta.y

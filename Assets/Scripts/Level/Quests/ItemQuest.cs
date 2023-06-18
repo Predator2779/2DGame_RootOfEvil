@@ -24,44 +24,34 @@ public class ItemQuest : Quest
 
     #region Base Methods
 
-    public override bool QuestAvailability(Questor questor, int evilLevel)
+    public override bool QuestAvailability(int evilLevel)
+    {
+        if (stage == QuestStages.NotStarted && evilLevel <= availabilityLevel) { return true; }
+        else { return false; }
+    }
+
+    public override void Initialize(Questor questor)
     {
         this.questor = questor;
-
-        if (isAvailable && evilLevel <= availabilityLevel) { return true; }
-        else { return false; }
     }
 
     public override void CompleteAction()
     {
         countQuestAction--;
 
-        if (countQuestAction <= 0)
-        {
-            countQuestAction = 0;
-
-            //if (!OptionalQuestIsAvailable())///to progressing
-            //{
-            //    currentState = QuestStates.Passed;
-            //}
-        }
+        CheckConditions();
     }
 
     public override void CheckConditions()
     {
-        switch (currentState)
+        if (countQuestAction <= 0)
         {
-            case QuestStates.NotStarted:
-                StartQuest();
-                break;
-            case QuestStates.Progressing:
-                ProgressingQuest();
-                break;
-            case QuestStates.Passed:
-                PassedQuest();
-                break;
-            default:
-                break;
+            countQuestAction = 0;
+
+            if (!AttachedQuestIsAvailable())
+            {
+                stage = QuestStages.Completed;
+            }
         }
     }
 
@@ -69,11 +59,11 @@ public class ItemQuest : Quest
 
     #region Quest
 
-    private bool OptionalQuestIsAvailable()
+    private bool AttachedQuestIsAvailable()
     {
-        if (optionalQuest != null && optionalQuest.isAvailable)
+        if (attachedQuest != null && attachedQuest.stage != QuestStages.Completed)
         {
-            optionalQuest.parentQuest = this;
+            //attachedQuest.parentQuest = this;
 
             return true;
         }
@@ -85,18 +75,16 @@ public class ItemQuest : Quest
 
     public override void StartQuest()
     {
-        this.questor = questor;//
-
         EventHandler.OnQuestStart?.Invoke(this);
 
-        if (OptionalQuestIsAvailable())
+        if (AttachedQuestIsAvailable())
         {
-            EventHandler.OnOptionalQuest?.Invoke(optionalQuest);
+            EventHandler.OnOptionalQuest?.Invoke(attachedQuest);
         }
 
         questor.Say(textGivingQuest + $"\n[{questItem.nameItem}{endingPluralWord}: {countQuestAction}]");
 
-        currentState = QuestStates.Progressing;
+        stage = QuestStages.Progressing;
     }
 
     public void ProgressingQuest()
@@ -105,13 +93,13 @@ public class ItemQuest : Quest
             textNoDoneQuest +
             $"\n[{questItem.nameItem}{endingPluralWord}: {countQuestAction}]");
 
-        if (!OptionalQuestIsAvailable() && countQuestAction <= 0)
-        {
-            currentState = QuestStates.Passed;
-        }
+        //if (!AttachedQuestIsAvailable() && countQuestAction <= 0)
+        //{
+        //    stage = QuestStages.Passed;
+        //}
     }
 
-    public override void PassedQuest()
+    public override void CompleteQuest()
     {
         if (parentQuest != null)
         {

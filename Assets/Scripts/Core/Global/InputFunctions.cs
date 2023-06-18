@@ -65,9 +65,9 @@ namespace InputData
             return Input.GetKeyUp(KeyCode.E);
         }  
         
-        static public bool GetKeyF()
+        static public bool GetKeyF_Up()
         {
-            return Input.GetKey(KeyCode.F);
+            return Input.GetKeyUp(KeyCode.F);
         }
     }
 }

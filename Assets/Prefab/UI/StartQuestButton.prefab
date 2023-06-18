@@ -44,6 +44,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3307595849182877396}
     m_Modifications:
+    - target: {fileID: 483334089135696124, guid: 4d692de06c4b6714ca657b041e2f19ef, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: CheckStageQuest
+      objectReference: {fileID: 0}
     - target: {fileID: 524734362240881516, guid: 4d692de06c4b6714ca657b041e2f19ef, type: 3}
       propertyPath: m_Name
       value: Button

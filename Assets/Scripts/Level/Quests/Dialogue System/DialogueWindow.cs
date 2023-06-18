@@ -32,14 +32,19 @@ public class DialogueWindow : MonoBehaviour
         _dialogPanel.SetActive(value);
     }
 
-    public void ShowQuests(Quest[] quests, Questor questor)
+    public void ShowQuests(Quest[] quests, Questor questor, int evilLevel)
     {
+        ClearDialogue();
+
         var dialogText = Instantiate(_dialogText, _content.transform);
-        dialogText.text = "Список заданий:\n\n" + "\n\nEscape - закончить разговор.";
+        dialogText.text = "(Escape - закончить разговор)\n" + "Список заданий:";
 
         foreach (Quest quest in quests)
         {
-            SetButton(quest, questor);
+            if (quest.QuestAvailability(evilLevel))
+            {
+                SetButton(quest, questor);
+            }
         }
     }
 
@@ -49,7 +54,7 @@ public class DialogueWindow : MonoBehaviour
         clone.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = quest.description;
 
         var cloneQuest = clone.GetComponent<StartQuestButton>().quest = quest;
-        cloneQuest.questor = questor;
+        cloneQuest.Initialize(questor);
     }
 
     public void ClearDialogue()

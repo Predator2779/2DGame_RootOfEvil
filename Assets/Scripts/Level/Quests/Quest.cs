@@ -10,18 +10,22 @@ public abstract class Quest : ScriptableObject
 
     [Header("Quest Options")]
     [NonSerialized] public Questor questor;
-    //[NonSerialized] public Quest parentQuest;
-    //public Quest optionalQuest;
+    [NonSerialized] public Quest parentQuest;
+    public Quest attachedQuest;
+
+    [Header("Quest Launch Conditions")]
     public int availabilityLevel;
+    public Quest[] requiredCompletedQuests;
 
     [Header("Quest States")]
-    public QuestStates currentState;
-    public enum QuestStates
-    { NotStarted, Progressing, Passed };
+    public QuestStages stage;
+    public enum QuestStages
+    { NotStarted, Progressing, Completed, Passed };
 
-    public abstract bool QuestAvailability(Questor questor, int evilLevel);
+    public abstract bool QuestAvailability(int evilLevel);
+    public abstract void Initialize(Questor questor);
+    public abstract void StartQuest();
     public abstract void CompleteAction();
     public abstract void CheckConditions();
-    public abstract void StartQuest();
-    public abstract void PassedQuest();
+    public abstract void CompleteQuest();
 }
