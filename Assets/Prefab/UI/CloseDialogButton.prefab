@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 483334089135696124}
   - component: {fileID: 181879591819987554}
   m_Layer: 0
-  m_Name: StartQuestButton
+  m_Name: CloseDialogButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -124,8 +124,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 181879591819987554}
-        m_TargetAssemblyTypeName: StartQuestButton, Assembly-CSharp
-        m_MethodName: CheckStageQuest
+        m_TargetAssemblyTypeName: QuestButton, Assembly-CSharp
+        m_MethodName: CloseDialogWindow
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

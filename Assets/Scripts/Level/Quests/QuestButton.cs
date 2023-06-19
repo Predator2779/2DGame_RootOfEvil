@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class StartQuestButton : MonoBehaviour
+public class QuestButton : MonoBehaviour
 {
     public Quest quest;
 
@@ -23,5 +23,10 @@ public class StartQuestButton : MonoBehaviour
                 quest.CompleteQuest();
                 break;
         }
+    }
+
+    public void CloseDialogWindow()
+    {
+        EventHandler.OnDialogueWindowShow?.Invoke(false);
     }
 }

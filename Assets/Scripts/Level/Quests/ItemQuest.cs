@@ -22,8 +22,6 @@ public class ItemQuest : Quest
 
     #endregion
 
-    #region Base Methods
-
     public override bool QuestAvailability(int evilLevel)
     {
         if (stage != QuestStages.Passed && evilLevel <= availabilityLevel) { return true; }
@@ -33,6 +31,14 @@ public class ItemQuest : Quest
     public override void Initialize(Questor questor)
     {
         this.questor = questor;
+    }
+
+    public override void StartQuest()
+    {
+        EventHandler.OnQuestStart?.Invoke(this);
+        EventHandler.OnReplicaSay?.Invoke(textGivingQuest + $"\n[{questItem.nameItem}{endingPluralWord}: {countQuestAction}]");
+
+        stage = QuestStages.Progressing;
     }
 
     public override void CompleteAction()
@@ -55,10 +61,6 @@ public class ItemQuest : Quest
         }
     }
 
-    #endregion
-
-    #region Quest
-
     private bool AttachedQuestIsAvailable()
     {
         if (attachedQuest != null && attachedQuest.stage != QuestStages.Passed)
@@ -71,18 +73,8 @@ public class ItemQuest : Quest
         }
     }
 
-    public override void StartQuest()
-    {
-        EventHandler.OnQuestStart?.Invoke(this);
-        EventHandler.OnReplicaSay?.Invoke(textGivingQuest + $"\n[{questItem.nameItem}{endingPluralWord}: {countQuestAction}]");
-
-        stage = QuestStages.Progressing;
-    }
-
     public override void ProgressingQuest()
     {
-        CheckConditions();
-
         EventHandler.OnReplicaSay?.Invoke(
             textNoDoneQuest +
             $"\n[{questItem.nameItem}{endingPluralWord}: {countQuestAction}]");
@@ -101,6 +93,4 @@ public class ItemQuest : Quest
         stage = QuestStages.Passed;
         EventHandler.OnQuestPassed?.Invoke();
     }
-
-    #endregion
 }

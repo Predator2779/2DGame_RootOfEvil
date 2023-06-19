@@ -9,7 +9,8 @@ public class DialogueWindow : MonoBehaviour
     [SerializeField] private ContentSizeFitter _replicaContent;
     [SerializeField] private ContentSizeFitter _questsContent;
     [SerializeField] private TextMeshProUGUI _dialogText;
-    [SerializeField] private GameObject _startQuestButton;
+    [SerializeField] private Button _questButton;
+    [SerializeField] private Button _closeDialogButton;
 
     private void Start()
     {
@@ -21,25 +22,24 @@ public class DialogueWindow : MonoBehaviour
     public void Update()
     {
         if (_dialogPanel.activeSelf == true && InputFunctions.GetEscapeButton_Up())
-        {
-            ClearPanel(_questsContent.transform);
-            ClearPanel(_replicaContent.transform);
-
-            EventHandler.OnDialogueWindowShow?.Invoke(false);
-            EventHandler.OnGameModeChanged?.Invoke(GameModes.Playing);
-        }
+            WindowSetActive(false);
     }
 
     public void WindowSetActive(bool value)
     {
         _dialogPanel.SetActive(value);
+
+        if (value == false)
+        {
+            CloseDialogWindow();
+        }
     }
 
     public void ShowQuests(Quest[] quests, Questor questor, int evilLevel)
     {
         ClearPanel(_questsContent.transform);
 
-        Say("(Escape - закончить разговор)");
+        Say("(Escape - закончить разговор)");//
 
         var questText = Instantiate(_dialogText, _questsContent.transform);
         questText.text = "—писок заданий:";
@@ -48,18 +48,31 @@ public class DialogueWindow : MonoBehaviour
         {
             if (quest.QuestAvailability(evilLevel))
             {
-                SetButton(quest, questor);
+                SetQuestButton(quest, questor);
             }
         }
+
+        SetQuitDialogButton();
     }
 
-    private void SetButton(Quest quest, Questor questor)
+    private void SetQuestButton(Quest quest, Questor questor)
     {
-        var clone = Instantiate(_startQuestButton, parent: _questsContent.transform);
+        var clone = SetButton(_questButton, _questsContent.transform);
         clone.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = quest.description;
 
-        var cloneQuest = clone.GetComponent<StartQuestButton>().quest = quest;
+        var cloneQuest = clone.GetComponent<QuestButton>().quest = quest;
         cloneQuest.Initialize(questor);
+    }
+
+    private void SetQuitDialogButton()
+    {
+        var clone = SetButton(_closeDialogButton, _questsContent.transform);
+        clone.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "«акончить разговор.";
+    }
+
+    private Button SetButton(Button button, Transform parent)
+    {
+        return Instantiate(button, parent: parent);
     }
 
     public void Say(string replica)
@@ -72,7 +85,15 @@ public class DialogueWindow : MonoBehaviour
     {
         Transform[] allChildren = panel.GetComponentsInChildren<Transform>();
 
-        for(int i = 1; i < allChildren.Length; i++)
+        for (int i = 1; i < allChildren.Length; i++)
             Destroy(allChildren[i].gameObject);
+    }
+
+    public void CloseDialogWindow()
+    {
+        ClearPanel(_questsContent.transform);
+        ClearPanel(_replicaContent.transform);
+
+        EventHandler.OnGameModeChanged?.Invoke(GameModes.Playing);
     }
 }

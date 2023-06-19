@@ -78,11 +78,11 @@ public class Questor : MonoBehaviour
     {
         _dialogBox.gameObject.SetActive(false);
 
+        EventHandler.OnGameModeChanged?.Invoke(GameModes.Pause);
         EventHandler.OnDialogueWindowShow?.Invoke(true);
         EventHandler.OnShowQuests?.Invoke
             (_quests, this, _evilLevelCounter.GetCurrentEvilLevel());//////////////////////////////////////
         EventHandler.OnReplicaSay?.Invoke(_textGreeting);
-        EventHandler.OnGameModeChanged?.Invoke(GameModes.Pause);
     }
 
     public void ChangeSprite()
