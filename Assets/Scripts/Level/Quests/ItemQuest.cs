@@ -18,24 +18,46 @@ public class ItemQuest : Quest
     {
         countQuestAction--;
 
-        CheckConditions();
-    }
-
-    public override void CheckConditions()
-    {
         if (countQuestAction <= 0)
         {
             countQuestAction = 0;
+        }
 
-            if (!AttachedQuestIsAvailable())
-            {
-                stage = QuestStages.Completed;
-            }
+        ConditionsIsDone();
+    }
+
+
+    public override void ProgressingQuest()
+    {
+        if (!ConditionsIsDone())
+        {
+            EventHandler.OnReplicaSay?.Invoke(NoDoneReplica());
+        }
+    }
+
+    public override bool ConditionsIsDone()
+    {
+        if (countQuestAction <= 0 && !AttachedQuestIsAvailable())
+        {
+            stage = QuestStages.Completed;
+
+            return true;
         }
         else
         {
-            EventHandler.OnReplicaSay?.Invoke(
-                textNoDoneQuest + $"\n[{questItem.nameItem}{endingPluralWord}: {countQuestAction}]");
+            return false;
+        }
+    }
+
+    private string NoDoneReplica()
+    {
+        if (questItem != null)
+        {
+            return textNoDoneQuest + $"\n[{questItem.nameItem}{endingPluralWord}: {countQuestAction}]";
+        }
+        else
+        {
+            return textNoDoneQuest;
         }
     }
 }

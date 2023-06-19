@@ -6,9 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scriptable Objects/Quests/Scenes/Main Menu.unity
+    path: Assets/Scenes/Main Menu.unity
     guid: 9a825c16dff7585429435a383c5bf991
   - enabled: 1
-    path: Assets/Scriptable Objects/Quests/Scenes/Scene_1 (Roman).unity
+    path: Assets/Scenes/Scene_1 (Roman).unity
     guid: 2cda990e2423bbf4892e6590ba056729
   m_configObjects: {}

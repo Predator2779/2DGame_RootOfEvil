@@ -13,16 +13,25 @@ public class DialogueQuest : Quest
 
     #endregion
 
-    public override void CheckConditions()
+    public override bool ConditionsIsDone()
     {
         if (replicas.Length <= 0 && !AttachedQuestIsAvailable())
         {
             CompleteQuest();
+
+            return true;
         }
         else
         {
             CompleteAction();
+
+            return false;
         }
+    }
+
+    public override void ProgressingQuest()
+    {
+        ConditionsIsDone();
     }
 
     public override void CompleteAction()
