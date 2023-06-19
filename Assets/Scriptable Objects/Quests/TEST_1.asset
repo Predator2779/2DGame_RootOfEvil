@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6911ba27f45371e40b8608fc1329d1f7, type: 3}
+  m_Name: TEST_1
+  m_EditorClassIdentifier: 
+  questName: TEST_1
+  description: Talk Granny
+  attachedQuest: {fileID: 11400000, guid: fe5293259a2bb3a4b872d31fa0992643, type: 2}
+  textGivingQuest: Hello.
+  textNoDoneQuest: Talk now!
+  textCompleteQuest: Thank you!
+  availabilityLevel: 10
+  requiredCompletedQuests: []
+  stage: 0
+  randomSequence: 1
+  replicas:
+  - 1
+  - 2

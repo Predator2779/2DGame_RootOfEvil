@@ -20,7 +20,7 @@ public abstract class Quest : ScriptableObject
     public string textCompleteQuest;
 
     [Header("Quest Launch Conditions")]
-    public int availabilityLevel;
+    public int availabilityLevel = 10;
 
     //эти квесты должны быть выполнены, для того чтобы квест стал доступным
     public Quest[] requiredCompletedQuests;
