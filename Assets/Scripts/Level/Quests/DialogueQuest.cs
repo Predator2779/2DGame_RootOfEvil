@@ -1,99 +1,80 @@
 using UnityEngine;
 
-//[CreateAssetMenu(fileName = "New Quest", menuName = "Quests/DialogueQuest", order = 0)]
-//public class DialogueQuest : Quest
-//{
-//    #region Vars
+[CreateAssetMenu(fileName = "New Quest", menuName = "Quests/DialogueQuest", order = 0)]
+public class DialogueQuest : Quest
+{
+    #region Vars
 
-//    [Header("Replicas")]
-//    public bool randomSequence = false;
-//    public string[] replicas;
+    [Header("Replicas")]
+    public bool randomSequence = false;
+    public string[] replicas;
 
-//    private int _currentReplicaIndex = 0;
+    private int _currentReplicaIndex = 0;
 
-//    #endregion
+    #endregion
 
-//    #region Base Methods
+    public override void ProgressingQuest()
+    {
+        
+    }
 
-//    public override void StartQuest()
-//    {
-//        throw new System.NotImplementedException();
-//    }
+    public override void CheckConditions()
+    {
+        if (replicas.Length <= 0 && !AttachedQuestIsAvailable())
+        {
+            CompleteQuest();
+        }
+        else
+        {
+            CompleteAction();
+        }
+    }
 
-//    public override bool QuestAvailability(Questor questor, int evilLevel)
-//    {
-//        this.questor = questor;
+    public override void CompleteAction()
+    {
+        if (randomSequence)
+        {
+            EventHandler.OnReplicaSay?.Invoke(GetRandomReplica());
+        }
+        else
+        {
+            EventHandler.OnReplicaSay?.Invoke(GetSequenceReplica());
+        }
+    }
 
-//        if (isAvailable && evilLevel <= availabilityLevel) { return true; }
-//        else { return false; }
-//    }
+    #region Quest
 
-//    public override void CompleteAction()
-//    {
-//        if (randomSequence)
-//        {
-//            questor.Say(GetRandomReplica());
-//        }
-//        else
-//        {
-//            questor.Say(GetSequenceReplica());
-//        }
-//    }
+    private string GetRandomReplica()
+    {
+        int index = Random.Range(0, replicas.Length);
+        string replica = replicas[index];
 
-//    public override void CheckConditions()
-//    {
-//        if (replicas.Length > 0)
-//        {
-//            CompleteAction();
-//        }
-//        else
-//        {
-//            PassedQuest();
-//        }
-//    }
+        RemoveIndex(ref replicas, index);
 
-//    public override void PassedQuest()
-//    {
-//        questor.ChangeSprite();
+        return replica;
+    }
 
-//        isAvailable = false;
-//    }
+    private string GetSequenceReplica()
+    {
+        string replica = replicas[_currentReplicaIndex];
 
-//    #endregion
+        RemoveIndex(ref replicas, _currentReplicaIndex);
 
-//    #region Quest
+        return replica;
+    }
 
-//    private string GetRandomReplica()
-//    {
-//        int index = Random.Range(0, replicas.Length);
-//        string replica = replicas[index];
+    private void RemoveIndex(ref string[] arr, int index)
+    {
+        for (int i = index + 1; i < arr.Length; i++)
+            arr[i - 1] = arr[i];
 
-//        RemoveIndex(ref replicas, index);
+        string[] newArr = new string[arr.Length - 1];
 
-//        return replica;
-//    }
+        for (int i = 0; i < newArr.Length; i++)
+            newArr[i] = arr[i];
 
-//    private string GetSequenceReplica()
-//    {
-//        string replica = replicas[_currentReplicaIndex];
+        arr = newArr;
+    }
 
-//        RemoveIndex(ref replicas, _currentReplicaIndex);
-
-//        return replica;
-//    }
-
-//    private void RemoveIndex(ref string[] arr, int index)
-//    {
-//        for (int i = index + 1; i < arr.Length; i++)
-//            arr[i - 1] = arr[i];
-
-//        string[] newArr = new string[arr.Length - 1];
-
-//        for (int i = 0; i < newArr.Length; i++)
-//            newArr[i] = arr[i];
-
-//        arr = newArr;
-//    }
-
-//    #endregion
-//}
+    #endregion
+}

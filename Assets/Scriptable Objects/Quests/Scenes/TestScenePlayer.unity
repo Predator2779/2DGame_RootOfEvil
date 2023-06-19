@@ -3523,6 +3523,14 @@ PrefabInstance:
       propertyPath: m_SizeDelta.x
       value: -17
       objectReference: {fileID: 0}
+    - target: {fileID: 154736439256953076, guid: 113af71dd45d508479d477caba919829, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 154736439256953076, guid: 113af71dd45d508479d477caba919829, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.000061035156
+      objectReference: {fileID: 0}
     - target: {fileID: 154736439631672434, guid: 113af71dd45d508479d477caba919829, type: 3}
       propertyPath: m_AnchorMax.x
       value: 1
@@ -3530,6 +3538,10 @@ PrefabInstance:
     - target: {fileID: 154736439631672434, guid: 113af71dd45d508479d477caba919829, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 154736439631672434, guid: 113af71dd45d508479d477caba919829, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 418399148627803731, guid: 113af71dd45d508479d477caba919829, type: 3}
       propertyPath: m_AnchorMax.x
@@ -3652,8 +3664,12 @@ PrefabInstance:
       value: -17
       objectReference: {fileID: 0}
     - target: {fileID: 4490853885314921072, guid: 113af71dd45d508479d477caba919829, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0.00012207031
+      objectReference: {fileID: 0}
+    - target: {fileID: 4490853885314921072, guid: 113af71dd45d508479d477caba919829, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 124.99998
+      value: 124.99988
       objectReference: {fileID: 0}
     - target: {fileID: 4490853885321604031, guid: 113af71dd45d508479d477caba919829, type: 3}
       propertyPath: m_AnchorMax.x
@@ -3669,7 +3685,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4490853885741971190, guid: 113af71dd45d508479d477caba919829, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0.4999997
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4490853885741971190, guid: 113af71dd45d508479d477caba919829, type: 3}
       propertyPath: m_AnchorMin.y
@@ -3820,7 +3836,7 @@ MonoBehaviour:
   _dialogText: {fileID: 866243923}
   _textGreeting: "\u041F\u0440\u0438\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u044E!"
   _quests:
-  - {fileID: 11400000, guid: 646ffae1899d9564494274961b318325, type: 2}
+  - {fileID: 11400000, guid: 9c76c4106e39d6e469793fc61386168b, type: 2}
   _dialogueReady: 0
 --- !u!1 &5010626810707107694
 GameObject:
