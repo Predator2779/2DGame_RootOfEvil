@@ -14,6 +14,8 @@ public class ItemQuest : Quest
 
     #endregion
 
+    #region Base Methods
+
     public override void CompleteAction()
     {
         countQuestAction--;
@@ -25,7 +27,6 @@ public class ItemQuest : Quest
 
         ConditionsIsDone();
     }
-
 
     public override void ProgressingQuest()
     {
@@ -52,6 +53,8 @@ public class ItemQuest : Quest
             return false;
         }
     }
+
+    #endregion
 
     private string NoDoneReplica()
     {

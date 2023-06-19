@@ -39,7 +39,7 @@ public class Questor : MonoBehaviour
         _spriteRenderer.sprite = _sadNPC;
     }
 
-    private void Update()////////
+    private void Update()
     {
         if (InputFunctions.GetKeyF_Up() && _dialogueReady)
         {
@@ -81,7 +81,7 @@ public class Questor : MonoBehaviour
         EventHandler.OnGameModeChanged?.Invoke(GameModes.Pause);
         EventHandler.OnDialogueWindowShow?.Invoke(true);
         EventHandler.OnShowQuests?.Invoke
-            (_quests, this, _evilLevelCounter.GetCurrentEvilLevel());//////////////////////////////////////
+            (_quests, this, _evilLevelCounter.GetCurrentEvilLevel());
         EventHandler.OnReplicaSay?.Invoke(_textGreeting);
     }
 

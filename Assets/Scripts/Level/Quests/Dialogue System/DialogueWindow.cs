@@ -39,8 +39,6 @@ public class DialogueWindow : MonoBehaviour
     {
         ClearPanel(_questsContent.transform);
 
-        Say("(Escape - закончить разговор)");//
-
         var questText = Instantiate(_dialogText, _questsContent.transform);
         questText.text = "Список заданий:";
 

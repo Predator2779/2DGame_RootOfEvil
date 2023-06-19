@@ -13,19 +13,30 @@ public class DialogueQuest : Quest
 
     #endregion
 
+    #region Base Methods
+
     public override bool ConditionsIsDone()
     {
-        if (replicas.Length <= 0 && !AttachedQuestIsAvailable())
-        {
-            CompleteQuest();
-
-            return true;
-        }
-        else
+        if (replicas.Length > 0)
         {
             CompleteAction();
 
             return false;
+        }
+        else
+        {
+            if (AttachedQuestIsAvailable())
+            {
+                EventHandler.OnReplicaSay?.Invoke(textNoDoneQuest);
+
+                return false;
+            }
+            else
+            {
+                CompleteQuest();
+
+                return true;
+            }
         }
     }
 
@@ -45,6 +56,8 @@ public class DialogueQuest : Quest
             EventHandler.OnReplicaSay?.Invoke(GetSequenceReplica());
         }
     }
+
+    #endregion
 
     #region Quest
 

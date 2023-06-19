@@ -10,12 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6911ba27f45371e40b8608fc1329d1f7, type: 3}
-  m_Name: TEST_DIALOGUE
+  m_Name: TEST_DIALOGUE 1
   m_EditorClassIdentifier: 
   questName: TEST_DIALOGUE
   description: "\u041F\u043E\u0433\u043E\u0432\u043E\u0440\u0438\u0442\u044C \u0441
     \u0431\u0430\u0431\u0443\u043B\u0435\u0439"
-  attachedQuest: {fileID: 0}
+  attachedQuest: {fileID: 11400000, guid: 9c76c4106e39d6e469793fc61386168b, type: 2}
   textGivingQuest: "\u041D\u0443 \u0442\u0430\u043A \u0432\u043E\u0442..."
   textNoDoneQuest: 
   textCompleteQuest: "\u0421\u043F\u0430\u0441\u0438\u0431\u043E \u0447\u0442\u043E
