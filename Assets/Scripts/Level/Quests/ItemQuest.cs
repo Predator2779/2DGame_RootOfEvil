@@ -33,6 +33,10 @@ public class ItemQuest : Quest
         {
             EventHandler.OnReplicaSay?.Invoke(NoDoneReplica());
         }
+        else
+        {
+            CompleteQuest();
+        }
     }
 
     public override bool ConditionsIsDone()

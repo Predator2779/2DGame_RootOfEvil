@@ -24,7 +24,7 @@ MonoBehaviour:
     \u0421\u043F\u0430\u0441\u0438\u0431\u043E, \u0441\u0442\u0440\u0430\u043D\u043D\u0438\u043A!"
   availabilityLevel: 10
   requiredCompletedQuests: []
-  stage: 0
+  stage: 3
   countQuestAction: 0
   questItem: {fileID: 0}
   endingPluralWord: 

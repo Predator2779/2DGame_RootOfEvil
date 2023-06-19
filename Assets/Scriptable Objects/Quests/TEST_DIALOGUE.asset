@@ -23,8 +23,6 @@ MonoBehaviour:
     \u0432\u043D\u0443\u0447\u043E\u043A"
   availabilityLevel: 10
   requiredCompletedQuests: []
-  stage: 0
+  stage: 3
   randomSequence: 0
-  replicas:
-  - 1
-  - 2
+  replicas: []
