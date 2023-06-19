@@ -57,7 +57,11 @@ public abstract class Quest : ScriptableObject
         stage = QuestStages.Progressing;
     }
 
-    public abstract void ProgressingQuest();
+    public virtual void ProgressingQuest()
+    {
+        CheckConditions();
+    }
+
     public abstract void CompleteAction();
     public abstract void CheckConditions();
 

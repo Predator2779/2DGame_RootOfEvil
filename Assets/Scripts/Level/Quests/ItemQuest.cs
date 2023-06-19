@@ -32,12 +32,10 @@ public class ItemQuest : Quest
                 stage = QuestStages.Completed;
             }
         }
-    }
-
-    public override void ProgressingQuest()
-    {
-        EventHandler.OnReplicaSay?.Invoke(
-            textNoDoneQuest +
-            $"\n[{questItem.nameItem}{endingPluralWord}: {countQuestAction}]");
+        else
+        {
+            EventHandler.OnReplicaSay?.Invoke(
+                textNoDoneQuest + $"\n[{questItem.nameItem}{endingPluralWord}: {countQuestAction}]");
+        }
     }
 }
