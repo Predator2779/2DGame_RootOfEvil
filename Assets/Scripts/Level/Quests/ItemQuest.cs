@@ -61,10 +61,8 @@ public class ItemQuest : Quest
 
     private bool AttachedQuestIsAvailable()
     {
-        if (attachedQuest != null && attachedQuest.stage != QuestStages.Completed)
+        if (attachedQuest != null && attachedQuest.stage != QuestStages.Passed)
         {
-            //attachedQuest.parentQuest = this;
-
             return true;
         }
         else
@@ -76,43 +74,31 @@ public class ItemQuest : Quest
     public override void StartQuest()
     {
         EventHandler.OnQuestStart?.Invoke(this);
-
-        if (AttachedQuestIsAvailable())
-        {
-            EventHandler.OnOptionalQuest?.Invoke(attachedQuest);
-        }
-
         EventHandler.OnReplicaSay?.Invoke(textGivingQuest + $"\n[{questItem.nameItem}{endingPluralWord}: {countQuestAction}]");
 
         stage = QuestStages.Progressing;
     }
 
-    public void ProgressingQuest()
+    public override void ProgressingQuest()
     {
+        CheckConditions();
+
         EventHandler.OnReplicaSay?.Invoke(
             textNoDoneQuest +
             $"\n[{questItem.nameItem}{endingPluralWord}: {countQuestAction}]");
-
-        //if (!AttachedQuestIsAvailable() && countQuestAction <= 0)
-        //{
-        //    stage = QuestStages.Passed;
-        //}
     }
 
     public override void CompleteQuest()
     {
-        if (parentQuest != null)
-        {
-            parentQuest.CompleteAction();
-        }
-
         EventHandler.OnReplicaSay?.Invoke(textCompleteQuest);
+
+        PassedQuest();
+    }
+
+    public override void PassedQuest()
+    {
         questor.ChangeSprite();
-
-        //isAvailable = false;
-
         stage = QuestStages.Passed;
-
         EventHandler.OnQuestPassed?.Invoke();
     }
 

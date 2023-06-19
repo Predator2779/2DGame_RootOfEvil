@@ -9,17 +9,18 @@ public class StartQuestButton : MonoBehaviour
         if (quest == null)
             return;
 
+        quest.CheckConditions();
+
         switch (quest.stage)
         {
             case Quest.QuestStages.NotStarted:
                 quest.StartQuest();
                 break;
-            case Quest.QuestStages.Progressing://
+            case Quest.QuestStages.Progressing:
+                quest.ProgressingQuest();
                 break;
             case Quest.QuestStages.Completed:
                 quest.CompleteQuest();
-                break;
-            case Quest.QuestStages.Passed:
                 break;
         }
     }

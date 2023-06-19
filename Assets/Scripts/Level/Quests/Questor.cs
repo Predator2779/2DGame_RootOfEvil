@@ -23,7 +23,6 @@ public class Questor : MonoBehaviour
     [SerializeField] private string _textGreeting = "Приветствую!";
 
     [Header("Quest")]
-    //[SerializeField] private Quest _optionalQuest;//non
     [SerializeField] private Quest[] _quests;
 
     [SerializeField] private bool _dialogueReady = false;
@@ -50,13 +49,11 @@ public class Questor : MonoBehaviour
 
     private void OnEnable()
     {
-        //EventHandler.OnOptionalQuest.AddListener(SetOptionalQuest);
         EventHandler.OnGameModeChanged.AddListener(ChangeGameMode);
     }
 
     private void OnDisable()
     {
-        //EventHandler.OnOptionalQuest.RemoveListener(SetOptionalQuest);
         EventHandler.OnGameModeChanged.RemoveListener(ChangeGameMode);
     }
 
@@ -80,6 +77,7 @@ public class Questor : MonoBehaviour
     public void Dialogue()
     {
         _dialogBox.gameObject.SetActive(false);
+
         EventHandler.OnDialogueWindowShow?.Invoke(true);
         EventHandler.OnShowQuests?.Invoke
             (_quests, this, _evilLevelCounter.GetCurrentEvilLevel());//////////////////////////////////////
@@ -87,53 +85,12 @@ public class Questor : MonoBehaviour
         EventHandler.OnGameModeChanged?.Invoke(GameModes.Pause);
     }
 
-    //public void CheckQuest()
-    //{
-    //    if (_optionalQuest != null)
-    //    {
-    //        _optionalQuest.CheckQuest();
-
-    //        return;
-    //    }
-
-    //    foreach (var quest in _quests)
-    //    {
-    //        if (quest.QuestAvailability(this, _evilLevelCounter.GetCurrentEvilLevel()))
-    //        {
-    //            quest.CheckQuest();
-
-    //            return;
-    //        }
-    //    }
-
-    //    Greeting();
-    //}
-
     public void ChangeSprite()
     {
         _spriteRenderer.sprite = _smileNPC;
     }
 
-    //public void SetOptionalQuest(Quest optionalQuest)
-    //{
-    //    foreach (var quest in _quests)
-    //    {
-    //        if (quest == optionalQuest)
-    //        {
-    //            _optionalQuest = optionalQuest;
-    //        }
-    //    }
-    //}
-
     #region Trigger
-
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        //if (_gameMode == GameModes.Playing && collision.transform.tag == "Player")
-        //{
-        //    Greeting();
-        //}
-    }
 
     private void OnTriggerStay2D(Collider2D collision)
     {
