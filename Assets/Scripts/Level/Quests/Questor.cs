@@ -25,8 +25,7 @@ public class Questor : MonoBehaviour
     [Header("Quest")]
     [SerializeField] private Quest[] _quests;
 
-    [SerializeField] private bool _dialogueReady = false;
-
+    private bool _dialogueReady = false;
     private GameModes _gameMode;
 
     private void Start()
