@@ -6,21 +6,24 @@ using UnityEngine.UI;
 public class DialogueWindow : MonoBehaviour
 {
     [SerializeField] private GameObject _dialogPanel;
-    [SerializeField] private ContentSizeFitter _content;
+    [SerializeField] private ContentSizeFitter _replicaContent;
+    [SerializeField] private ContentSizeFitter _questsContent;
     [SerializeField] private TextMeshProUGUI _dialogText;
-    [SerializeField] private GameObject _buttonTest;
+    [SerializeField] private GameObject _startQuestButton;
 
     private void Start()
     {
         EventHandler.OnDialogueWindowShow.AddListener(WindowSetActive);
         EventHandler.OnShowQuests.AddListener(ShowQuests);
+        EventHandler.OnReplicaSay.AddListener(Say);
     }
 
     public void Update()
     {
         if (_dialogPanel.activeSelf == true && InputFunctions.GetEscapeButton_Up())
         {
-            ClearDialogue();
+            ClearPanel(_questsContent.transform);
+            ClearPanel(_replicaContent.transform);
 
             EventHandler.OnDialogueWindowShow?.Invoke(false);
             EventHandler.OnGameModeChanged?.Invoke(GameModes.Playing);
@@ -34,10 +37,12 @@ public class DialogueWindow : MonoBehaviour
 
     public void ShowQuests(Quest[] quests, Questor questor, int evilLevel)
     {
-        ClearDialogue();
+        ClearPanel(_questsContent.transform);
 
-        var dialogText = Instantiate(_dialogText, _content.transform);
-        dialogText.text = "(Escape - закончить разговор)\n" + "Список заданий:";
+        Say("(Escape - закончить разговор)");
+
+        var questText = Instantiate(_dialogText, _questsContent.transform);
+        questText.text = "Список заданий:";
 
         foreach (Quest quest in quests)
         {
@@ -50,16 +55,22 @@ public class DialogueWindow : MonoBehaviour
 
     private void SetButton(Quest quest, Questor questor)
     {
-        var clone = Instantiate(_buttonTest, parent: _content.transform);
+        var clone = Instantiate(_startQuestButton, parent: _questsContent.transform);
         clone.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = quest.description;
 
         var cloneQuest = clone.GetComponent<StartQuestButton>().quest = quest;
         cloneQuest.Initialize(questor);
     }
 
-    public void ClearDialogue()
+    public void Say(string replica)
     {
-        Transform[] allChildren = _content.transform.GetComponentsInChildren<Transform>();
+        var replicaText = Instantiate(_dialogText, _replicaContent.transform);
+        replicaText.text = replica;
+    }
+
+    public void ClearPanel(Transform panel)
+    {
+        Transform[] allChildren = panel.GetComponentsInChildren<Transform>();
 
         for(int i = 1; i < allChildren.Length; i++)
             Destroy(allChildren[i].gameObject);

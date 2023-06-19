@@ -13,8 +13,8 @@ public class ItemQuest : Quest
     public string textGivingQuest;
     [TextArea(2, 4)]
     public string textNoDoneQuest;
-    [TextArea(2, 4)] 
-    public string textDoneQuest;
+    [TextArea(2, 4)]
+    public string textCompleteQuest;
 
     [Header("Quest Item")]
     public Item questItem;
@@ -26,7 +26,7 @@ public class ItemQuest : Quest
 
     public override bool QuestAvailability(int evilLevel)
     {
-        if (stage == QuestStages.NotStarted && evilLevel <= availabilityLevel) { return true; }
+        if (stage != QuestStages.Passed && evilLevel <= availabilityLevel) { return true; }
         else { return false; }
     }
 
@@ -82,14 +82,14 @@ public class ItemQuest : Quest
             EventHandler.OnOptionalQuest?.Invoke(attachedQuest);
         }
 
-        questor.Say(textGivingQuest + $"\n[{questItem.nameItem}{endingPluralWord}: {countQuestAction}]");
+        EventHandler.OnReplicaSay?.Invoke(textGivingQuest + $"\n[{questItem.nameItem}{endingPluralWord}: {countQuestAction}]");
 
         stage = QuestStages.Progressing;
     }
 
     public void ProgressingQuest()
     {
-        questor.Say(
+        EventHandler.OnReplicaSay?.Invoke(
             textNoDoneQuest +
             $"\n[{questItem.nameItem}{endingPluralWord}: {countQuestAction}]");
 
@@ -106,10 +106,12 @@ public class ItemQuest : Quest
             parentQuest.CompleteAction();
         }
 
-        questor.Say(textDoneQuest);
+        EventHandler.OnReplicaSay?.Invoke(textCompleteQuest);
         questor.ChangeSprite();
 
-        isAvailable = false;
+        //isAvailable = false;
+
+        stage = QuestStages.Passed;
 
         EventHandler.OnQuestPassed?.Invoke();
     }
