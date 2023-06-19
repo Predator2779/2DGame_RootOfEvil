@@ -13,11 +13,6 @@ public class DialogueQuest : Quest
 
     #endregion
 
-    public override void ProgressingQuest()
-    {
-        
-    }
-
     public override void CheckConditions()
     {
         if (replicas.Length <= 0 && !AttachedQuestIsAvailable())
