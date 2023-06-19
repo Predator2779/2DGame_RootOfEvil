@@ -9,8 +9,6 @@ public class QuestButton : MonoBehaviour
         if (quest == null)
             return;
 
-        quest.CheckConditions();
-
         switch (quest.stage)
         {
             case Quest.QuestStages.NotStarted:
