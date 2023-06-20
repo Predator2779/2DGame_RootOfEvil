@@ -60,11 +60,11 @@ public class ItemQuest : Quest
     {
         if (questItem != null)
         {
-            return textNoDoneQuest + $"\n[{questItem.nameItem}{endingPluralWord}: {countQuestAction}]";
+            return noDoneReplicas + $"\n[{questItem.nameItem}{endingPluralWord}: {countQuestAction}]";
         }
         else
         {
-            return textNoDoneQuest;
+            return noDoneReplicas[GetRandomIndex(noDoneReplicas)];
         }
     }
 }

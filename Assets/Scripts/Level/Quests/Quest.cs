@@ -9,15 +9,15 @@ public abstract class Quest : ScriptableObject
 
     [Header("Quest Options")]
     [NonSerialized] public Questor questor;
-    public Quest attachedQuest;
+    public Quest[] attachedQuests;
 
     [Header("Base Replicas")]
     [TextArea(2, 4)]
-    public string textGivingQuest;
+    public string givingQuestReplica;
     [TextArea(2, 4)]
-    public string textNoDoneQuest;
+    public string[] noDoneReplicas;
     [TextArea(2, 4)]
-    public string textCompleteQuest;
+    public string completeQuestReplica;
 
     [Header("Quest Launch Conditions")]
     public int availabilityLevel = 10;
@@ -28,20 +28,18 @@ public abstract class Quest : ScriptableObject
     [Header("Quest States")]
     public QuestStages stage;
     public enum QuestStages
-    { NotStarted, Progressing, Completed, Passed };
+    { NotAvailable, NotStarted, Progressing, Completed, Passed };
 
     public virtual bool QuestAvailability(int evilLevel)
     {
         foreach (var quest in requiredCompletedQuests)
-        {
             if (quest.stage != QuestStages.Passed)
-            {
                 return false;
-            }
-        }
 
-        if (stage != QuestStages.Passed && evilLevel <= availabilityLevel) { return true; }
-        else { return false; }
+        if (stage != QuestStages.NotAvailable && stage != QuestStages.Passed && evilLevel <= availabilityLevel)
+            return true;
+        else
+            return false;
     }
 
     public virtual void Initialize(Questor questor)
@@ -52,7 +50,11 @@ public abstract class Quest : ScriptableObject
     public virtual void StartQuest()
     {
         EventHandler.OnQuestStart?.Invoke(this);
-        EventHandler.OnReplicaSay?.Invoke(textGivingQuest);
+        EventHandler.OnReplicaSay?.Invoke(givingQuestReplica);
+
+        foreach (var quest in attachedQuests)
+            if (quest.stage == QuestStages.NotAvailable)
+                quest.stage = QuestStages.NotStarted;
 
         stage = QuestStages.Progressing;
     }
@@ -63,19 +65,21 @@ public abstract class Quest : ScriptableObject
 
     public virtual bool AttachedQuestIsAvailable()
     {
-        if (attachedQuest != null && attachedQuest.stage != QuestStages.Passed)
+        if (attachedQuests != null)
         {
-            return true;
-        }
-        else
-        {
+            foreach (var quest in attachedQuests)
+                if (quest.stage != QuestStages.Passed)
+                    return true;
+
             return false;
         }
+        else
+            return false;
     }
 
     public virtual void CompleteQuest()
     {
-        EventHandler.OnReplicaSay?.Invoke(textCompleteQuest);
+        EventHandler.OnReplicaSay?.Invoke(completeQuestReplica);
 
         PassedQuest();
     }
@@ -85,5 +89,10 @@ public abstract class Quest : ScriptableObject
         questor.ChangeSprite();
         stage = QuestStages.Passed;
         EventHandler.OnQuestPassed?.Invoke();
+    }
+
+    public virtual int GetRandomIndex(string[] arr)
+    {
+        return UnityEngine.Random.Range(0, arr.Length);
     }
 }

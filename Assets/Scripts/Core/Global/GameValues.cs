@@ -6,7 +6,7 @@ public class GameValues : MonoBehaviour
 
 #if UNITY_EDITOR
 
-    private GameModes oldMode;
+    private GameModes oldMode = GameModes.Pause;
 
     private void Start()
     {
@@ -21,8 +21,6 @@ public class GameValues : MonoBehaviour
         if (GameMode != oldMode)
         {
             GameMode = oldMode;
-
-            //ChangeGameMode(GameMode);
 
             EventHandler.OnGameModeChanged?.Invoke(GameMode);
         }

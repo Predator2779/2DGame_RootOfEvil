@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Quest", menuName = "Quests/DialogueQuest", order = 0)]
@@ -8,8 +9,6 @@ public class DialogueQuest : Quest
     [Header("Replicas")]
     public bool randomSequence = false;
     public string[] replicas;
-
-    private int _currentReplicaIndex = 0;
 
     #endregion
 
@@ -27,7 +26,7 @@ public class DialogueQuest : Quest
         {
             if (AttachedQuestIsAvailable())
             {
-                EventHandler.OnReplicaSay?.Invoke(textNoDoneQuest);
+                EventHandler.OnReplicaSay?.Invoke(noDoneReplicas[GetRandomIndex(noDoneReplicas)]);
 
                 return false;
             }
@@ -47,40 +46,27 @@ public class DialogueQuest : Quest
 
     public override void CompleteAction()
     {
+        int index;
+
         if (randomSequence)
         {
-            EventHandler.OnReplicaSay?.Invoke(GetRandomReplica());
+            index = GetRandomIndex(replicas);
+            EventHandler.OnReplicaSay?.Invoke(replicas[index]);
         }
         else
         {
-            EventHandler.OnReplicaSay?.Invoke(GetSequenceReplica());
+            index = 0;
+            EventHandler.OnReplicaSay?.Invoke(replicas[index]);
         }
+
+        RemoveReplica(ref replicas, index);
     }
 
     #endregion
 
     #region Quest
 
-    private string GetRandomReplica()
-    {
-        int index = Random.Range(0, replicas.Length);
-        string replica = replicas[index];
-
-        RemoveIndex(ref replicas, index);
-
-        return replica;
-    }
-
-    private string GetSequenceReplica()
-    {
-        string replica = replicas[_currentReplicaIndex];
-
-        RemoveIndex(ref replicas, _currentReplicaIndex);
-
-        return replica;
-    }
-
-    private void RemoveIndex(ref string[] arr, int index)
+    private void RemoveReplica(ref string[] arr, int index)
     {
         for (int i = index + 1; i < arr.Length; i++)
             arr[i - 1] = arr[i];
