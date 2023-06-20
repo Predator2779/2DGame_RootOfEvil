@@ -32,6 +32,13 @@ public class EvilLevelCounter : MonoBehaviour
 
         EvilLevelChange();
     }
+    
+    private void EvilLevelDown(Quest quest)//
+    {
+        _evilLevel--;
+
+        EvilLevelChange();
+    }
 
     private void EvilLevelChange()
     {

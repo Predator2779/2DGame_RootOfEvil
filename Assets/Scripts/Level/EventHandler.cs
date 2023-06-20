@@ -12,7 +12,7 @@ public static class EventHandler
     public static UnityEvent<string> OnReplicaSay = new UnityEvent<string>();
     public static UnityEvent<bool> OnDialogueWindowShow = new UnityEvent<bool>();
     public static UnityEvent<Quest> OnQuestStart = new UnityEvent<Quest>();
-    public static UnityEvent OnQuestPassed = new UnityEvent();
+    public static UnityEvent<Quest> OnQuestPassed = new UnityEvent<Quest>();
 
     #endregion
 }

@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public abstract class Quest : ScriptableObject
@@ -24,6 +25,8 @@ public abstract class Quest : ScriptableObject
 
     //эти квесты должны быть выполнены, для того чтобы квест стал доступным
     public Quest[] requiredCompletedQuests;
+    //эти квесты завершают этот.
+    public Quest[] completingQuests;
 
     [Header("Quest States")]
     public QuestStages stage;
@@ -51,6 +54,7 @@ public abstract class Quest : ScriptableObject
     {
         EventHandler.OnQuestStart?.Invoke(this);
         EventHandler.OnReplicaSay?.Invoke(givingQuestReplica);
+        EventHandler.OnQuestPassed.AddListener(CompletingQuest);
 
         foreach (var quest in attachedQuests)
             if (quest.stage == QuestStages.NotAvailable)
@@ -84,11 +88,22 @@ public abstract class Quest : ScriptableObject
         PassedQuest();
     }
 
+    public virtual void CompletingQuest(Quest quest)
+    {
+        foreach (var completingQuest in completingQuests)
+            if (quest.name == completingQuest.name)
+            {
+                PassedQuest();
+
+                break;
+            }
+    }
+
     public virtual void PassedQuest()
     {
         questor.ChangeSprite();
         stage = QuestStages.Passed;
-        EventHandler.OnQuestPassed?.Invoke();
+        EventHandler.OnQuestPassed?.Invoke(this);
     }
 
     public virtual int GetRandomIndex(string[] arr)
