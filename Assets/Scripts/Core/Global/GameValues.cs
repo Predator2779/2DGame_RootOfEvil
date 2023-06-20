@@ -10,7 +10,7 @@ public class GameValues : MonoBehaviour
 
     private void Start()
     {
-        GameMode = GameModes.Playing;
+        oldMode = GameModes.Playing;
 
         EventHandler.OnGameModeChanged.AddListener(ChangeGameMode);
         EventHandler.OnGameModeChanged?.Invoke(GameMode);
