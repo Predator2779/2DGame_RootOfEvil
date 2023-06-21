@@ -62,6 +62,14 @@ public class DialogueQuest : Quest
         RemoveReplica(ref replicas, index);
     }
 
+    //public override void PassedQuest()
+    //{
+    //    questor.ChangeSprite();
+    //    stage = QuestStages.Passed;
+
+    //    EventHandler.OnQuestPassed?.Invoke(this);
+    //}
+
     #endregion
 
     #region Quest
