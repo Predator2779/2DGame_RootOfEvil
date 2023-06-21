@@ -60,7 +60,7 @@ public class ItemQuest : Quest
     {
         if (questItem != null)
         {
-            return noDoneReplicas + $"\n[{questItem.nameItem}{endingPluralWord}: {countQuestAction}]";
+            return noDoneReplicas[GetRandomIndex(noDoneReplicas)] + $"\n[{questItem.nameItem}{endingPluralWord}: {countQuestAction}]";
         }
         else
         {
