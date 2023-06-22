@@ -14,10 +14,7 @@ public class EvilLevelCounter : MonoBehaviour
         EventHandler.OnEvilLevelChanged.Invoke(_evilLevel);
     }
 
-    public int GetCurrentEvilLevel()
-    {
-        return _evilLevel;
-    }
+    public int GetCurrentEvilLevel() => _evilLevel;
 
     private void EvilLevelUp()
     {
@@ -26,14 +23,7 @@ public class EvilLevelCounter : MonoBehaviour
         EvilLevelChange();
     }  
     
-    private void EvilLevelDown()
-    {
-        _evilLevel--;
-
-        EvilLevelChange();
-    }
-    
-    private void EvilLevelDown(Quest quest)//
+    private void EvilLevelDown(Quest quest)
     {
         _evilLevel--;
 

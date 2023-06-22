@@ -42,22 +42,16 @@ public class QuestAction : MonoBehaviour, IUsable
             CompleteAction();
 
             if (!_isReusable)
-            {
                 gameObject.SetActive(false);
-            }
         }
     }
 
     public bool CheckItem(Item item)
     {
         if (_nameQuestItem != null && item.nameItem == _nameQuestItem)
-        {
             return true;
-        }
         else
-        {
             return false;
-        }
     }
 
     public void CompleteAction()
@@ -65,17 +59,13 @@ public class QuestAction : MonoBehaviour, IUsable
         _quest.CompleteAction();
 
         if (_newSprite != null)
-        {
             GetComponent<SpriteRenderer>().sprite = _newSprite;
-        }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.TryGetComponent(out Item item) && CheckItem(item))
-        {
             PassiveAction();
-        }
     }
 
     #region NotImplemented

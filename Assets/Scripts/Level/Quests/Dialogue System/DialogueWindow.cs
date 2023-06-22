@@ -30,9 +30,7 @@ public class DialogueWindow : MonoBehaviour
         _dialogPanel.SetActive(value);
 
         if (value == false)
-        {
             CloseDialogWindow();
-        }
     }
 
     public void ShowQuests(Quest[] quests, Questor questor, int evilLevel)
@@ -43,12 +41,8 @@ public class DialogueWindow : MonoBehaviour
         questText.text = "Список заданий:";
 
         foreach (Quest quest in quests)
-        {
             if (quest.QuestAvailability(evilLevel))
-            {
                 SetQuestButton(quest, questor);
-            }
-        }
 
         SetQuitDialogButton();
     }

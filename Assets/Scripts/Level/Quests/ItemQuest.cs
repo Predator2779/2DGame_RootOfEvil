@@ -18,12 +18,8 @@ public class ItemQuest : Quest
 
     public override void CompleteAction()
     {
-        countQuestAction--;
-
-        if (countQuestAction <= 0)
-        {
-            countQuestAction = 0;
-        }
+        if (countQuestAction > 0)
+            countQuestAction--;
 
         ConditionsIsDone();
     }
@@ -31,27 +27,21 @@ public class ItemQuest : Quest
     public override void ProgressingQuest()
     {
         if (!ConditionsIsDone())
-        {
             EventHandler.OnReplicaSay?.Invoke(NoDoneReplica());
-        }
         else
-        {
             CompleteQuest();
-        }
     }
 
     public override bool ConditionsIsDone()
     {
         if (countQuestAction <= 0 && !AttachedQuestIsAvailable())
         {
-            stage = QuestStages.Completed;
+            ChangeStage(QuestStages.Completed);
 
             return true;
         }
         else
-        {
             return false;
-        }
     }
 
     #endregion
@@ -59,12 +49,9 @@ public class ItemQuest : Quest
     private string NoDoneReplica()
     {
         if (questItem != null)
-        {
-            return noDoneReplicas[GetRandomIndex(noDoneReplicas)] + $"\n[{questItem.nameItem}{endingPluralWord}: {countQuestAction}]";
-        }
+            return noDoneReplicas[GetRandomIndex(noDoneReplicas)] +
+                $"\n[{questItem.nameItem}{endingPluralWord}: {countQuestAction}]";
         else
-        {
             return noDoneReplicas[GetRandomIndex(noDoneReplicas)];
-        }
     }
 }

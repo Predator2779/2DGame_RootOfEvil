@@ -31,9 +31,7 @@ public class Questor : MonoBehaviour
     private void Start()
     {
         if (_spriteRenderer == null)
-        {
             _spriteRenderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
-        }
 
         _spriteRenderer.sprite = _sadNPC;
     }
@@ -41,9 +39,7 @@ public class Questor : MonoBehaviour
     private void Update()
     {
         if (InputFunctions.GetKeyF_Up() && _dialogueReady)
-        {
             Dialogue();
-        }
     }
 
     private void OnEnable()
@@ -59,11 +55,6 @@ public class Questor : MonoBehaviour
     private void ChangeGameMode(GameModes mode)
     {
         _gameMode = mode;
-    }
-
-    public void Greeting()
-    {
-        Say("[F] - поговорить.");
     }
 
     public void Say(string text)
@@ -94,9 +85,7 @@ public class Questor : MonoBehaviour
     private void OnTriggerStay2D(Collider2D collision)
     {
         if (_gameMode == GameModes.Playing && collision.transform.tag == "Player")
-        {
-            Greeting();
-        }
+            Say("[F] - поговорить.");
     }
 
     private void OnTriggerExit2D(Collider2D collision)

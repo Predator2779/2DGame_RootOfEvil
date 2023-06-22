@@ -67,15 +67,11 @@ public class InputHandler : MonoBehaviour
         }
     }
 
-
     #endregion
 
     #region Other
 
-    private void ChangeGameMode(GameModes mode)
-    {
-        _gameMode = mode;
-    }
+    private void ChangeGameMode(GameModes mode) => _gameMode = mode;
 
     private bool IsPlayerMoving()
     {
@@ -109,10 +105,7 @@ public class InputHandler : MonoBehaviour
 
     #region Rotation
 
-    private TurnHandler.playerSides GetLastPlayerSide()
-    {
-        return _turnHandler.currentSide;
-    }
+    private TurnHandler.playerSides GetLastPlayerSide() => _turnHandler.currentSide;
 
     private void PlayerSideChanger()
     {
@@ -134,10 +127,7 @@ public class InputHandler : MonoBehaviour
         }
     }
 
-    private void SetPlayerSide(TurnHandler.playerSides side)
-    {
-        _turnHandler.SetPlayerSide(side);
-    }
+    private void SetPlayerSide(TurnHandler.playerSides side) => _turnHandler.SetPlayerSide(side);
 
     #endregion
 
@@ -162,9 +152,7 @@ public class InputHandler : MonoBehaviour
     private void UseItem()
     {
         if (InputFunctions.GetLMB_Up())
-        {
             _player.Use();
-        }
     }
 
     private Vector2 GetMovementVector()

@@ -4,31 +4,43 @@ using UnityEngine;
 public abstract class Quest : ScriptableObject
 {
     [Header("Quest")]
-    [NonSerialized] public Questor questor;
     public string questName;
     public string description;
+    [Tooltip("На случай, если квест имеет чисто диалоговый характер и необходимо, чтобы он не зачитывался")]
+    private enum QuestType { Quest, Dialog }
+    [SerializeField] private QuestType type = QuestType.Quest;
+    [NonSerialized] public Questor questor;
 
     [Header("Base Replicas")]
     [TextArea(2, 4)]
-    public string givingQuestReplica;
+    public string givingReplica;
     [TextArea(2, 4)]
     public string[] noDoneReplicas;
     [TextArea(2, 4)]
-    public string completeQuestReplica;
+    public string completeReplica;
 
     [Header("Chain Quests")]
-    //на случай, если квест имеет чисто диалоговый характер и необходимо, чтобы он не зачитывался
-    public bool isNotQuest = false;
     [NonSerialized] public Quest prevQuest;
     public Quest nextQuest;
+    [Tooltip("Квесты, завершающие данный квест")]
+    public Quest[] passingQuests;
 
-    [Header("Quest Launch Conditions")]
+    [Header("Requirements Quest Launch")]
+    [Tooltip("Требуемый уровень зла в мире (ниже указанного)")]
     public int availabilityLevel = 10;
-
-    //эти квесты должны быть выполнены, для того чтобы квест стал доступным
+    [Tooltip("Эти квесты должны быть начаты, для того чтобы квест стал доступным")]
+    public Quest[] requiredStartedQuests;
+    [Tooltip("Эти квесты должны быть выполнены, для того чтобы квест стал доступным")]
     public Quest[] requiredCompletedQuests;
-    //квесты, завершающие данный квест.
-    public Quest[] completingQuests;
+    [Tooltip("Эти квесты должны быть завершены, для того чтобы квест стал доступным")]
+    public Quest[] requiredPassedQuests;
+
+    [Tooltip("Делает доступными эти квесты, после старта этого")]
+    public Quest[] availableAfterStart;
+    [Tooltip("Делает доступными эти квесты, после выполнения этого")]
+    public Quest[] availableAfterComplete;
+    [Tooltip("Делает доступными эти квесты, после завершения этого")]
+    public Quest[] availableAfterPass;
 
     [Header("Quest States")]
     public QuestStages stage;
@@ -37,16 +49,27 @@ public abstract class Quest : ScriptableObject
 
     public virtual bool QuestAvailability(int evilLevel)
     {
-        foreach (var quest in requiredCompletedQuests)
-            if (quest.stage != QuestStages.Passed)
-                return false;
-
-        if (stage != QuestStages.NotAvailable &&
+        if (
+            IsMeetsTheRequirements(requiredStartedQuests, QuestStages.Progressing) &&
+            IsMeetsTheRequirements(requiredCompletedQuests, QuestStages.Completed) &&
+            IsMeetsTheRequirements(requiredPassedQuests, QuestStages.Passed) &&
+            stage != QuestStages.NotAvailable &&
             stage != QuestStages.Passed &&
-            evilLevel <= availabilityLevel)
+            evilLevel <= availabilityLevel
+            )
             return true;
         else
             return false;
+    }
+
+    private bool IsMeetsTheRequirements(Quest[] quests, QuestStages requiredStage)
+    {
+        if (quests != null)
+            foreach (var quest in quests)
+                if (quest.stage != requiredStage)
+                    return false;
+
+        return true;
     }
 
     public virtual void Initialize(Questor questor)
@@ -57,13 +80,17 @@ public abstract class Quest : ScriptableObject
     public virtual void StartQuest()
     {
         EventHandler.OnQuestStart?.Invoke(this);
-        EventHandler.OnReplicaSay?.Invoke(givingQuestReplica);
-        EventHandler.OnQuestPassed.AddListener(CompletingQuest);
+        EventHandler.OnReplicaSay?.Invoke(givingReplica);
+        EventHandler.OnDialogPassed.AddListener(PassingQuest);
 
-        if (nextQuest != null && nextQuest.stage == QuestStages.NotAvailable)
-            nextQuest.stage = QuestStages.NotStarted;
+        if (nextQuest?.stage == QuestStages.NotAvailable)
+        {
+            nextQuest.ChangeStage(QuestStages.NotStarted);
 
-        stage = QuestStages.Progressing;
+            nextQuest.prevQuest = this;
+        }
+
+        ChangeStage(QuestStages.Progressing);
     }
 
     public abstract void ProgressingQuest();
@@ -72,28 +99,23 @@ public abstract class Quest : ScriptableObject
 
     public virtual bool AttachedQuestIsAvailable()
     {
-        if (nextQuest != null)
-        {
-            if (nextQuest.stage != QuestStages.Passed)
-                return true;
-
-            return false;
-        }
+        if (nextQuest != null && nextQuest?.stage != QuestStages.Passed)
+            return true;
         else
             return false;
     }
 
     public virtual void CompleteQuest()
     {
-        EventHandler.OnReplicaSay?.Invoke(completeQuestReplica);
+        EventHandler.OnReplicaSay?.Invoke(completeReplica);
 
         PassQuest();
     }
 
-    public virtual void CompletingQuest(Quest quest)
+    public virtual void PassingQuest(Quest quest)
     {
-        foreach (var completingQuest in completingQuests)
-            if (quest.name == completingQuest.name)
+        foreach (var passingQuest in passingQuests)
+            if (quest.name == passingQuest.name)
             {
                 PassQuest();
 
@@ -103,16 +125,43 @@ public abstract class Quest : ScriptableObject
 
     public virtual void PassQuest()
     {
-        stage = QuestStages.Passed;
-        questor.ChangeSprite();
-        prevQuest.ConditionsIsDone();
+        ChangeStage(QuestStages.Passed);
 
-        if (!isNotQuest)
+        questor.ChangeSprite();
+        prevQuest?.ConditionsIsDone();
+
+        EventHandler.OnDialogPassed?.Invoke(this);
+
+        if (type == QuestType.Quest)
             EventHandler.OnQuestPassed?.Invoke(this);
     }
 
     public virtual int GetRandomIndex(string[] arr)
     {
         return UnityEngine.Random.Range(0, arr.Length);
+    }
+
+    public void ChangeStage(QuestStages stage)
+    {
+        this.stage = stage;
+
+        switch (this.stage)
+        {
+            case QuestStages.Progressing:
+                MakeAvailableQuests(availableAfterStart);
+                break;
+            case QuestStages.Completed:
+                MakeAvailableQuests(availableAfterComplete);
+                break;
+            case QuestStages.Passed:
+                MakeAvailableQuests(availableAfterPass);
+                break;
+        }
+    }
+
+    private void MakeAvailableQuests(Quest[] quests)
+    {
+        foreach (var quest in quests)
+            quest.ChangeStage(QuestStages.NotStarted);
     }
 }

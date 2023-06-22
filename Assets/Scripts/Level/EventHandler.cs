@@ -12,7 +12,10 @@ public static class EventHandler
     public static UnityEvent<string> OnReplicaSay = new UnityEvent<string>();
     public static UnityEvent<bool> OnDialogueWindowShow = new UnityEvent<bool>();
     public static UnityEvent<Quest> OnQuestStart = new UnityEvent<Quest>();
+    // Для EvilLevelCounter.
     public static UnityEvent<Quest> OnQuestPassed = new UnityEvent<Quest>();
+    // Для завершения заданий.
+    public static UnityEvent<Quest> OnDialogPassed = new UnityEvent<Quest>();
 
     #endregion
 }

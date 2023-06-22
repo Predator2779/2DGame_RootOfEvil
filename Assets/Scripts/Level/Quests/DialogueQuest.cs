@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Quest", menuName = "Quests/DialogueQuest", order = 0)]
@@ -6,9 +5,9 @@ public class DialogueQuest : Quest
 {
     #region Vars
 
-    [Header("Replicas")]
+    [Header("Quest Replicas")]
     public bool randomSequence = false;
-    public string[] replicas;
+    public string[] questReplicas;
 
     #endregion
 
@@ -16,7 +15,7 @@ public class DialogueQuest : Quest
 
     public override bool ConditionsIsDone()
     {
-        if (replicas.Length > 0)
+        if (questReplicas.Length > 0)
         {
             CompleteAction();
 
@@ -32,6 +31,8 @@ public class DialogueQuest : Quest
             }
             else
             {
+                ChangeStage(QuestStages.Completed);
+
                 CompleteQuest();
 
                 return true;
@@ -50,25 +51,17 @@ public class DialogueQuest : Quest
 
         if (randomSequence)
         {
-            index = GetRandomIndex(replicas);
-            EventHandler.OnReplicaSay?.Invoke(replicas[index]);
+            index = GetRandomIndex(questReplicas);
+            EventHandler.OnReplicaSay?.Invoke(questReplicas[index]);
         }
         else
         {
             index = 0;
-            EventHandler.OnReplicaSay?.Invoke(replicas[index]);
+            EventHandler.OnReplicaSay?.Invoke(questReplicas[index]);
         }
 
-        RemoveReplica(ref replicas, index);
+        RemoveReplica(ref questReplicas, index);
     }
-
-    //public override void PassedQuest()
-    //{
-    //    questor.ChangeSprite();
-    //    stage = QuestStages.Passed;
-
-    //    EventHandler.OnQuestPassed?.Invoke(this);
-    //}
 
     #endregion
 
