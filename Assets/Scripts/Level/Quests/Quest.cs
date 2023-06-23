@@ -22,8 +22,12 @@ public abstract class Quest : ScriptableObject
     [Header("Chain Quests")]
     [NonSerialized] public Quest prevQuest;
     public Quest nextQuest;
-    [Tooltip(" весты, завершающие данный квест")]
-    public Quest[] passingQuests;
+    [Tooltip(" весты, завершающие данный квест после начала этого")]
+    public Quest[] passingQuestsAfterStart;
+    [Tooltip(" весты, завершающие данный квест после выполнени€ этого")]
+    public Quest[] passingQuestsAfterComplete;
+    [Tooltip(" весты, завершающие данный квест после завершени€ этого")]
+    public Quest[] passingQuestsAfterPass;
 
     [Header("Requirements Quest Launch")]
     [Tooltip("“ребуемый уровень зла в мире (ниже указанного)")]
@@ -79,10 +83,6 @@ public abstract class Quest : ScriptableObject
 
     public virtual void StartQuest()
     {
-        EventHandler.OnQuestStart?.Invoke(this);
-        EventHandler.OnReplicaSay?.Invoke(givingReplica);
-        EventHandler.OnDialogPassed.AddListener(PassingQuest);
-
         if (nextQuest?.stage == QuestStages.NotAvailable)
         {
             nextQuest.ChangeStage(QuestStages.NotStarted);
@@ -112,9 +112,17 @@ public abstract class Quest : ScriptableObject
         PassQuest();
     }
 
-    public virtual void PassingQuest(Quest quest)
+    #region Passing Quests from other Quest
+
+    public virtual void PassingQuestAfterStart(Quest quest) => PassingQuest(quest, passingQuestsAfterStart);
+
+    public virtual void PassingQuestAfterComplete(Quest quest) => PassingQuest(quest, passingQuestsAfterComplete);
+
+    public virtual void PassingQuestAfterPass(Quest quest) => PassingQuest(quest, passingQuestsAfterPass);
+
+    public virtual void PassingQuest(Quest quest, Quest[] quests)
     {
-        foreach (var passingQuest in passingQuests)
+        foreach (var passingQuest in passingQuestsAfterPass)
             if (quest.name == passingQuest.name)
             {
                 PassQuest();
@@ -123,14 +131,14 @@ public abstract class Quest : ScriptableObject
             }
     }
 
+    #endregion
+
     public virtual void PassQuest()
     {
         ChangeStage(QuestStages.Passed);
 
         questor.ChangeSprite();
         prevQuest?.ConditionsIsDone();
-
-        EventHandler.OnDialogPassed?.Invoke(this);
 
         if (type == QuestType.Quest)
             EventHandler.OnQuestPassed?.Invoke(this);
@@ -149,12 +157,19 @@ public abstract class Quest : ScriptableObject
         {
             case QuestStages.Progressing:
                 MakeAvailableQuests(availableAfterStart);
+                EventHandler.OnQuestStart?.Invoke(this);
+                EventHandler.OnReplicaSay?.Invoke(givingReplica);
+                EventHandler.OnQuestStart.AddListener(PassingQuestAfterStart);
+                EventHandler.OnQuestComplete.AddListener(PassingQuestAfterComplete);
+                EventHandler.OnDialogPassed.AddListener(PassingQuestAfterPass);
                 break;
             case QuestStages.Completed:
                 MakeAvailableQuests(availableAfterComplete);
+                EventHandler.OnQuestComplete?.Invoke(this);
                 break;
             case QuestStages.Passed:
                 MakeAvailableQuests(availableAfterPass);
+                EventHandler.OnDialogPassed?.Invoke(this);
                 break;
         }
     }
