@@ -210,7 +210,7 @@ public abstract class Quest : ScriptableObject
     {
         if (quests != null)
             foreach (var quest in quests)
-                if (quest.stage != requiredStage)
+                if (quest.stage == requiredStage)
                     return false;
 
         return true;

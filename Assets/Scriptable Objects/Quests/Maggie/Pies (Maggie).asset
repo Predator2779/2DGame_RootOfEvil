@@ -31,7 +31,8 @@ MonoBehaviour:
   availableQuests_complete: []
   availableQuests_pass: []
   nextQuest: {fileID: 0}
-  passQuests_start: []
+  passQuests_start:
+  - {fileID: 11400000, guid: a897ee8b150d61947af41cdacaaaaff3, type: 2}
   passQuests_complete: []
   passQuests_pass: []
   randomSequence: 1
