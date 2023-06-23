@@ -24,30 +24,30 @@ public abstract class Quest : ScriptableObject
     [Header("Chain Quests")]
     [NonSerialized] public Quest prevQuest;
     public Quest nextQuest;
-    [Tooltip("Квесты, завершающие данный квест после начала этого")]
-    public Quest[] passingQuestsAfterStart;
-    [Tooltip("Квесты, завершающие данный квест после выполнения этого")]
-    public Quest[] passingQuestsAfterComplete;
-    [Tooltip("Квесты, завершающие данный квест после завершения этого")]
-    public Quest[] passingQuestsAfterPass;
+    [Tooltip("Квесты, завершающие данный квест после их начала")]
+    public Quest[] passQuests_start;
+    [Tooltip("Квесты, завершающие данный квест после их выполнения")]
+    public Quest[] passQuests_complete;
+    [Tooltip("Квесты, завершающие данный квест после их завершения")]
+    public Quest[] passQuests_pass;
 
     [Header("Requirements Quest Launch")]
     [Tooltip("Требуемый уровень зла в мире (ниже указанного)")]
     public int availabilityLevel = 10;
     [Tooltip("Эти квесты должны быть начаты, для того чтобы квест стал доступным")]
-    public Quest[] requiredStartedQuests;
+    public Quest[] requiredQuests_start;
     [Tooltip("Эти квесты должны быть выполнены, для того чтобы квест стал доступным")]
-    public Quest[] requiredCompletedQuests;
+    public Quest[] requiredQuests_complete;
     [Tooltip("Эти квесты должны быть завершены, для того чтобы квест стал доступным")]
-    public Quest[] requiredPassedQuests;
+    public Quest[] requiredQuests_pass;
 
     [Header("Make Available after this Quests")]
     [Tooltip("Делает доступными эти квесты, после старта этого")]
-    public Quest[] availableAfterStart;
+    public Quest[] availableQuests_start;
     [Tooltip("Делает доступными эти квесты, после выполнения этого")]
-    public Quest[] availableAfterComplete;
+    public Quest[] availableQuests_complete;
     [Tooltip("Делает доступными эти квесты, после завершения этого")]
-    public Quest[] availableAfterPass;
+    public Quest[] availableQuests_pass;
 
     [Header("Quest States")]
     public QuestStages stage;
@@ -58,6 +58,22 @@ public abstract class Quest : ScriptableObject
 
     #region Base Methods
 
+    public virtual bool QuestAvailability(int evilLevel)
+    {
+        if (
+            IsMeetsTheRequirements(requiredQuests_start, QuestStages.Progressing) &&
+            IsMeetsTheRequirements(requiredQuests_complete, QuestStages.Completed) &&
+            IsMeetsTheRequirements(requiredQuests_pass, QuestStages.Passed) &&
+            stage != QuestStages.NotAvailable &&
+            stage != QuestStages.Passed &&
+            evilLevel <= availabilityLevel
+            )
+            return true;
+        else
+            return false;
+    }
+
+    public virtual void Initialize(Questor questor) => this.questor = questor;
 
     public void ChangeStage(QuestStages stage) => this.stage = stage;
 
@@ -77,29 +93,13 @@ public abstract class Quest : ScriptableObject
         }
     }
 
-    public virtual bool QuestAvailability(int evilLevel)
-    {
-        if (
-            IsMeetsTheRequirements(requiredStartedQuests, QuestStages.Progressing) &&
-            IsMeetsTheRequirements(requiredCompletedQuests, QuestStages.Completed) &&
-            IsMeetsTheRequirements(requiredPassedQuests, QuestStages.Passed) &&
-            stage != QuestStages.NotAvailable &&
-            stage != QuestStages.Passed &&
-            evilLevel <= availabilityLevel
-            )
-            return true;
-        else
-            return false;
-    }
-
-    public virtual void Initialize(Questor questor) => this.questor = questor;
-
     public virtual void StartQuest()
     {
-        MakeAvailableQuests(availableAfterStart);
+        MakeAvailableQuests(availableQuests_start);
 
         EventHandler.OnQuestStart?.Invoke(this);
         EventHandler.OnReplicaSay?.Invoke(givingReplica);
+
         EventHandler.OnQuestStart.AddListener(PassingQuestAfterStart);
         EventHandler.OnQuestComplete.AddListener(PassingQuestAfterComplete);
         EventHandler.OnDialogPassed.AddListener(PassingQuestAfterPass);
@@ -114,18 +114,6 @@ public abstract class Quest : ScriptableObject
         ChangeStage(QuestStages.Progressing);
     }
 
-    public virtual bool ConditionsIsDone()
-    {
-        if (SomeCondition() && !AttachedQuestIsAvailable())
-        {
-            CompleteQuest();
-
-            return true;
-        }
-        else
-            return false;
-    }
-
     public virtual void ProgressingQuest()
     {
         if (ConditionsIsDone())
@@ -138,7 +126,7 @@ public abstract class Quest : ScriptableObject
     {
         EventHandler.OnQuestComplete?.Invoke(this);
 
-        MakeAvailableQuests(availableAfterComplete);
+        MakeAvailableQuests(availableQuests_complete);
 
         ChangeStage(QuestStages.Completed);
     }
@@ -153,9 +141,21 @@ public abstract class Quest : ScriptableObject
         if (type == QuestType.Quest)
             EventHandler.OnQuestPassed?.Invoke(this);
 
-        MakeAvailableQuests(availableAfterPass);
+        MakeAvailableQuests(availableQuests_pass);
 
         ChangeStage(QuestStages.Passed);
+    }
+
+    public virtual bool ConditionsIsDone()
+    {
+        if (SomeCondition() && !AttachedQuestIsAvailable())
+        {
+            CompleteQuest();
+
+            return true;
+        }
+        else
+            return false;
     }
 
     public abstract bool SomeCondition();
@@ -166,15 +166,15 @@ public abstract class Quest : ScriptableObject
 
     #region Passing Quests from other Quest
 
-    public virtual void PassingQuestAfterStart(Quest quest) => PassingQuest(quest, passingQuestsAfterStart);
+    public virtual void PassingQuestAfterStart(Quest quest) => PassingQuest(quest, passQuests_start);
 
-    public virtual void PassingQuestAfterComplete(Quest quest) => PassingQuest(quest, passingQuestsAfterComplete);
+    public virtual void PassingQuestAfterComplete(Quest quest) => PassingQuest(quest, passQuests_complete);
 
-    public virtual void PassingQuestAfterPass(Quest quest) => PassingQuest(quest, passingQuestsAfterPass);
+    public virtual void PassingQuestAfterPass(Quest quest) => PassingQuest(quest, passQuests_pass);
 
     public virtual void PassingQuest(Quest quest, Quest[] quests)
     {
-        foreach (var passingQuest in passingQuestsAfterPass)
+        foreach (var passingQuest in passQuests_pass)
             if (quest.name == passingQuest.name)
             {
                 PassQuest();
