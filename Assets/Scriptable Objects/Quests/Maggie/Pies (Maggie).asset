@@ -35,4 +35,7 @@ MonoBehaviour:
   availableQuests_complete: []
   availableQuests_pass: []
   randomSequence: 1
-  questReplicas: []
+  questReplicas:
+  - 1
+  - 2
+  - 3

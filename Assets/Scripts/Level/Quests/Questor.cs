@@ -30,6 +30,8 @@ public class Questor : MonoBehaviour
 
     private void Start()
     {
+        EventHandler.OnEvilLevelChanged.AddListener(SetSadSprite);
+
         if (_spriteRenderer == null)
             _spriteRenderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
 
@@ -66,7 +68,13 @@ public class Questor : MonoBehaviour
 
     private void ChangeGameMode(GameModes mode) => _gameMode = mode;
 
-    public void ChangeSprite() => _spriteRenderer.sprite = _smileNPC;
+    public void SetSmileSprite() => _spriteRenderer.sprite = _smileNPC;
+
+    public void SetSadSprite(int evilLevel)
+    {
+        if (evilLevel >= 9)
+            _spriteRenderer.sprite = _sadNPC;
+    }
 
     #region Trigger
 
