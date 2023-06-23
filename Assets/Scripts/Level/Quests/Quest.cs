@@ -126,6 +126,7 @@ public abstract class Quest : ScriptableObject
 
     public void CompleteQuest()
     {
+        EventHandler.OnReplicaSay?.Invoke(completeReplica);
         EventHandler.OnQuestComplete?.Invoke(this);
 
         MakeAvailableQuests(availableQuests_complete);
@@ -135,8 +136,6 @@ public abstract class Quest : ScriptableObject
 
     public virtual void PassQuest()
     {
-        EventHandler.OnReplicaSay?.Invoke(completeReplica);
-
         questor.ChangeSprite();
         prevQuest?.ConditionsIsDone();
 
@@ -210,10 +209,9 @@ public abstract class Quest : ScriptableObject
 
     private bool IsMeetsTheRequirements(Quest[] quests, QuestStages requiredStage)
     {
-        if (quests != null)
-            foreach (var quest in quests)
-                if (quest.stage != requiredStage)
-                    return false;
+        foreach (var quest in quests)
+            if (quest.stage != requiredStage)
+                return false;
 
         return true;
     }
