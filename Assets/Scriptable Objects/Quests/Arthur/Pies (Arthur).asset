@@ -35,8 +35,7 @@ MonoBehaviour:
     \u0431\u044B\u0442\u044C \u043D\u0435 \u0434\u043E\u043B\u0436\u043D\u043E."
   availabilityLevel: 10
   requiredQuests_start: []
-  requiredQuests_complete:
-  - {fileID: 11400000, guid: 35d7d400bf793d842a24c05bff572527, type: 2}
+  requiredQuests_complete: []
   requiredQuests_pass: []
   availableQuests_start: []
   availableQuests_complete: []
