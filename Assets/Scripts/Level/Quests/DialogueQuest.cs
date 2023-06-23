@@ -13,38 +13,6 @@ public class DialogueQuest : Quest
 
     #region Base Methods
 
-    public override bool ConditionsIsDone()
-    {
-        if (questReplicas.Length > 0)
-        {
-            CompleteAction();
-
-            return false;
-        }
-        else
-        {
-            if (AttachedQuestIsAvailable())
-            {
-                EventHandler.OnReplicaSay?.Invoke(noDoneReplicas[GetRandomIndex(noDoneReplicas)]);
-
-                return false;
-            }
-            else
-            {
-                ChangeStage(QuestStages.Completed);
-
-                CompleteQuest();
-
-                return true;
-            }
-        }
-    }
-
-    public override void ProgressingQuest()
-    {
-        ConditionsIsDone();
-    }
-
     public override void CompleteAction()
     {
         int index;
@@ -63,9 +31,19 @@ public class DialogueQuest : Quest
         RemoveReplica(ref questReplicas, index);
     }
 
+    public override void NoDone()
+    {
+        CompleteAction();
+    }
+
+    public override bool SomeCondition()
+    {
+        return questReplicas.Length <= 0;
+    }
+
     #endregion
 
-    #region Quest
+    #region Other Methods
 
     private void RemoveReplica(ref string[] arr, int index)
     {

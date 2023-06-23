@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Quest", menuName = "Quests/ItemQuest", order = 0)]
@@ -24,27 +25,19 @@ public class ItemQuest : Quest
         ConditionsIsDone();
     }
 
-    public override void ProgressingQuest()
+    public override bool SomeCondition()
     {
-        if (!ConditionsIsDone())
-            EventHandler.OnReplicaSay?.Invoke(NoDoneReplica());
-        else
-            CompleteQuest();
+        return countQuestAction <= 0 ? true : false;
     }
 
-    public override bool ConditionsIsDone()
+    public override void NoDone()
     {
-        if (countQuestAction <= 0 && !AttachedQuestIsAvailable())
-        {
-            ChangeStage(QuestStages.Completed);
-
-            return true;
-        }
-        else
-            return false;
+        EventHandler.OnReplicaSay?.Invoke(NoDoneReplica());
     }
 
     #endregion
+
+    #region Other Methods
 
     private string NoDoneReplica()
     {
@@ -54,4 +47,6 @@ public class ItemQuest : Quest
         else
             return noDoneReplicas[GetRandomIndex(noDoneReplicas)];
     }
+
+    #endregion
 }

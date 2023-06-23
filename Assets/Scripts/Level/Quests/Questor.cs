@@ -42,21 +42,6 @@ public class Questor : MonoBehaviour
             Dialogue();
     }
 
-    private void OnEnable()
-    {
-        EventHandler.OnGameModeChanged.AddListener(ChangeGameMode);
-    }
-
-    private void OnDisable()
-    {
-        EventHandler.OnGameModeChanged.RemoveListener(ChangeGameMode);
-    }
-
-    private void ChangeGameMode(GameModes mode)
-    {
-        _gameMode = mode;
-    }
-
     public void Say(string text)
     {
         _dialogText.text = text;
@@ -75,10 +60,13 @@ public class Questor : MonoBehaviour
         EventHandler.OnReplicaSay?.Invoke(_textGreeting);
     }
 
-    public void ChangeSprite()
-    {
-        _spriteRenderer.sprite = _smileNPC;
-    }
+    private void OnEnable() => EventHandler.OnGameModeChanged.AddListener(ChangeGameMode);
+
+    private void OnDisable() => EventHandler.OnGameModeChanged.RemoveListener(ChangeGameMode);
+
+    private void ChangeGameMode(GameModes mode) => _gameMode = mode;
+
+    public void ChangeSprite() => _spriteRenderer.sprite = _smileNPC;
 
     #region Trigger
 

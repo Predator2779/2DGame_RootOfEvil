@@ -58,6 +58,25 @@ public abstract class Quest : ScriptableObject
 
     #region Base Methods
 
+
+    public void ChangeStage(QuestStages stage) => this.stage = stage;
+
+    public void CheckQuest()
+    {
+        switch (stage)
+        {
+            case QuestStages.NotStarted:
+                StartQuest();
+                break;
+            case QuestStages.Progressing:
+                ProgressingQuest();
+                break;
+            case QuestStages.Completed:
+                PassQuest();
+                break;
+        }
+    }
+
     public virtual bool QuestAvailability(int evilLevel)
     {
         if (
@@ -73,13 +92,18 @@ public abstract class Quest : ScriptableObject
             return false;
     }
 
-    public virtual void Initialize(Questor questor)
-    {
-        this.questor = questor;
-    }
+    public virtual void Initialize(Questor questor) => this.questor = questor;
 
     public virtual void StartQuest()
     {
+        MakeAvailableQuests(availableAfterStart);
+
+        EventHandler.OnQuestStart?.Invoke(this);
+        EventHandler.OnReplicaSay?.Invoke(givingReplica);
+        EventHandler.OnQuestStart.AddListener(PassingQuestAfterStart);
+        EventHandler.OnQuestComplete.AddListener(PassingQuestAfterComplete);
+        EventHandler.OnDialogPassed.AddListener(PassingQuestAfterPass);
+
         if (nextQuest?.stage == QuestStages.NotAvailable)
         {
             nextQuest.ChangeStage(QuestStages.NotStarted);
@@ -90,35 +114,53 @@ public abstract class Quest : ScriptableObject
         ChangeStage(QuestStages.Progressing);
     }
 
-    public abstract void ProgressingQuest();
-    public abstract void CompleteAction();
-    public abstract bool ConditionsIsDone();
-
-    public virtual bool AttachedQuestIsAvailable()
+    public virtual bool ConditionsIsDone()
     {
-        if (nextQuest != null && nextQuest?.stage != QuestStages.Passed)
+        if (SomeCondition() && !AttachedQuestIsAvailable())
+        {
+            CompleteQuest();
+
             return true;
+        }
         else
             return false;
     }
 
-    public virtual void CompleteQuest()
+    public virtual void ProgressingQuest()
     {
-        EventHandler.OnReplicaSay?.Invoke(completeReplica);
+        if (ConditionsIsDone())
+            PassQuest();
+        else
+            NoDone();
+    }
 
-        PassQuest();
+    public void CompleteQuest()
+    {
+        EventHandler.OnQuestComplete?.Invoke(this);
+
+        MakeAvailableQuests(availableAfterComplete);
+
+        ChangeStage(QuestStages.Completed);
     }
 
     public virtual void PassQuest()
     {
-        ChangeStage(QuestStages.Passed);
+        EventHandler.OnReplicaSay?.Invoke(completeReplica);
 
         questor.ChangeSprite();
         prevQuest?.ConditionsIsDone();
 
         if (type == QuestType.Quest)
             EventHandler.OnQuestPassed?.Invoke(this);
+
+        MakeAvailableQuests(availableAfterPass);
+
+        ChangeStage(QuestStages.Passed);
     }
+
+    public abstract bool SomeCondition();
+    public abstract void CompleteAction();
+    public abstract void NoDone();
 
     #endregion
 
@@ -143,34 +185,19 @@ public abstract class Quest : ScriptableObject
 
     #endregion
 
-    public void ChangeStage(QuestStages stage)
-    {
-        this.stage = stage;
-
-        switch (this.stage)
-        {
-            case QuestStages.Progressing:
-                MakeAvailableQuests(availableAfterStart);
-                EventHandler.OnQuestStart?.Invoke(this);
-                EventHandler.OnReplicaSay?.Invoke(givingReplica);
-                EventHandler.OnQuestStart.AddListener(PassingQuestAfterStart);
-                EventHandler.OnQuestComplete.AddListener(PassingQuestAfterComplete);
-                EventHandler.OnDialogPassed.AddListener(PassingQuestAfterPass);
-                break;
-            case QuestStages.Completed:
-                MakeAvailableQuests(availableAfterComplete);
-                EventHandler.OnQuestComplete?.Invoke(this);
-                break;
-            case QuestStages.Passed:
-                MakeAvailableQuests(availableAfterPass);
-                EventHandler.OnDialogPassed?.Invoke(this);
-                break;
-        }
-    }
+    #region Other Methods
 
     public virtual int GetRandomIndex(string[] arr)
     {
         return UnityEngine.Random.Range(0, arr.Length);
+    }
+
+    public virtual bool AttachedQuestIsAvailable()
+    {
+        if (nextQuest != null && nextQuest?.stage != QuestStages.Passed)
+            return true;
+        else
+            return false;
     }
 
     private void MakeAvailableQuests(Quest[] quests)
@@ -188,4 +215,6 @@ public abstract class Quest : ScriptableObject
 
         return true;
     }
+
+    #endregion
 }
