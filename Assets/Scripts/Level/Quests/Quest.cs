@@ -62,14 +62,8 @@ public abstract class Quest : ScriptableObject
 
     public virtual bool QuestAvailability(int evilLevel)
     {
-        if (
-            IsMeetsTheRequirements(requiredQuests_start, QuestStages.Progressing) &&
-            IsMeetsTheRequirements(requiredQuests_complete, QuestStages.Completed) &&
-            IsMeetsTheRequirements(requiredQuests_pass, QuestStages.Passed) &&
-            stage != QuestStages.NotAvailable &&
-            stage != QuestStages.Passed &&
-            evilLevel <= availabilityLevel
-            )
+        if (stage != QuestStages.NotAvailable && stage != QuestStages.Passed &&
+            evilLevel <= availabilityLevel && CheckRequiredQuests())
             return true;
         else
             return false;
@@ -100,7 +94,7 @@ public abstract class Quest : ScriptableObject
         MakeAvailableQuests(availableQuests_start);
 
         EventHandler.OnQuestStart?.Invoke(this);
-        EventHandler.OnReplicaSay?.Invoke(givingReplica);
+        EventHandler.OnReplicaSay?.Invoke(questor, givingReplica);
 
         EventHandler.OnQuestStart.AddListener(PassingQuestAfterStart);
         EventHandler.OnQuestComplete.AddListener(PassingQuestAfterComplete);
@@ -126,7 +120,7 @@ public abstract class Quest : ScriptableObject
 
     public void CompleteQuest()
     {
-        EventHandler.OnReplicaSay?.Invoke(completeReplica);
+        EventHandler.OnReplicaSay?.Invoke(questor, completeReplica);
         EventHandler.OnQuestComplete?.Invoke(this);
 
         MakeAvailableQuests(availableQuests_complete);
@@ -199,6 +193,22 @@ public abstract class Quest : ScriptableObject
             return true;
         else
             return false;
+    }
+
+    private bool CheckRequiredQuests()
+    {
+        if (
+            IsMeetsTheRequirements(requiredQuests_start, QuestStages.Progressing) &&
+            IsMeetsTheRequirements(requiredQuests_complete, QuestStages.Completed) &&
+            IsMeetsTheRequirements(requiredQuests_pass, QuestStages.Passed)
+            )
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     private void MakeAvailableQuests(Quest[] quests)

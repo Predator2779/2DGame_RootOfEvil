@@ -9,7 +9,7 @@ public static class EventHandler
     #region Quest and Dialog Events
 
     public static UnityEvent<Quest[], Questor, int> OnShowQuests = new UnityEvent<Quest[], Questor, int>();
-    public static UnityEvent<string> OnReplicaSay = new UnityEvent<string>();
+    public static UnityEvent<Questor, string> OnReplicaSay = new UnityEvent<Questor, string>();
     public static UnityEvent<bool> OnDialogueWindowShow = new UnityEvent<bool>();
     public static UnityEvent<Quest> OnQuestStart = new UnityEvent<Quest>();
     public static UnityEvent<Quest> OnQuestComplete = new UnityEvent<Quest>();

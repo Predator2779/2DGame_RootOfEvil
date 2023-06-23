@@ -32,7 +32,7 @@ public class ItemQuest : Quest
 
     public override void NoDone()
     {
-        EventHandler.OnReplicaSay?.Invoke(NoDoneReplica());
+        EventHandler.OnReplicaSay?.Invoke(questor, NoDoneReplica());
     }
 
     #endregion

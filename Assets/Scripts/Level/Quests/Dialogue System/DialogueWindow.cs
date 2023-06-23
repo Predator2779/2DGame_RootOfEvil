@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class DialogueWindow : MonoBehaviour
 {
+    [SerializeField]private Questor questor;
     [SerializeField] private GameObject _dialogPanel;
     [SerializeField] private ContentSizeFitter _replicaContent;
     [SerializeField] private ContentSizeFitter _questsContent;
@@ -35,6 +36,8 @@ public class DialogueWindow : MonoBehaviour
 
     public void ShowQuests(Quest[] quests, Questor questor, int evilLevel)
     {
+        this.questor = questor;
+
         ClearPanel(_questsContent.transform);
 
         var questText = Instantiate(_dialogText, _questsContent.transform);
@@ -67,10 +70,13 @@ public class DialogueWindow : MonoBehaviour
         return Instantiate(button, parent: parent);
     }
 
-    public void Say(string replica)
+    public void Say(Questor questor, string replica)
     {
-        var replicaText = Instantiate(_dialogText, _replicaContent.transform);
-        replicaText.text = replica;
+        if (this.questor != null && questor == this.questor)
+        {
+            var replicaText = Instantiate(_dialogText, _replicaContent.transform);
+            replicaText.text = replica;
+        }
     }
 
     public void ClearPanel(Transform panel)

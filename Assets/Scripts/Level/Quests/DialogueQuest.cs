@@ -20,12 +20,12 @@ public class DialogueQuest : Quest
         if (randomSequence)
         {
             index = GetRandomIndex(questReplicas);
-            EventHandler.OnReplicaSay?.Invoke(questReplicas[index]);
+            EventHandler.OnReplicaSay?.Invoke(questor, questReplicas[index]);
         }
         else
         {
             index = 0;
-            EventHandler.OnReplicaSay?.Invoke(questReplicas[index]);
+            EventHandler.OnReplicaSay?.Invoke(questor, questReplicas[index]);
         }
 
         RemoveReplica(ref questReplicas, index);

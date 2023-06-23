@@ -57,7 +57,7 @@ public class Questor : MonoBehaviour
         EventHandler.OnDialogueWindowShow?.Invoke(true);
         EventHandler.OnShowQuests?.Invoke
             (_quests, this, _evilLevelCounter.GetCurrentEvilLevel());
-        EventHandler.OnReplicaSay?.Invoke(_textGreeting);
+        EventHandler.OnReplicaSay?.Invoke(this, _textGreeting);
     }
 
     private void OnEnable() => EventHandler.OnGameModeChanged.AddListener(ChangeGameMode);
