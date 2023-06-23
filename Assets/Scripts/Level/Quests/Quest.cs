@@ -3,6 +3,8 @@ using UnityEngine;
 
 public abstract class Quest : ScriptableObject
 {
+    #region Vars
+
     [Header("Quest")]
     public string questName;
     public string description;
@@ -39,6 +41,7 @@ public abstract class Quest : ScriptableObject
     [Tooltip("Эти квесты должны быть завершены, для того чтобы квест стал доступным")]
     public Quest[] requiredPassedQuests;
 
+    [Header("Make Available after this Quests")]
     [Tooltip("Делает доступными эти квесты, после старта этого")]
     public Quest[] availableAfterStart;
     [Tooltip("Делает доступными эти квесты, после выполнения этого")]
@@ -50,6 +53,10 @@ public abstract class Quest : ScriptableObject
     public QuestStages stage;
     public enum QuestStages
     { NotAvailable, NotStarted, Progressing, Completed, Passed };
+
+    #endregion
+
+    #region Base Methods
 
     public virtual bool QuestAvailability(int evilLevel)
     {
@@ -64,16 +71,6 @@ public abstract class Quest : ScriptableObject
             return true;
         else
             return false;
-    }
-
-    private bool IsMeetsTheRequirements(Quest[] quests, QuestStages requiredStage)
-    {
-        if (quests != null)
-            foreach (var quest in quests)
-                if (quest.stage != requiredStage)
-                    return false;
-
-        return true;
     }
 
     public virtual void Initialize(Questor questor)
@@ -112,6 +109,19 @@ public abstract class Quest : ScriptableObject
         PassQuest();
     }
 
+    public virtual void PassQuest()
+    {
+        ChangeStage(QuestStages.Passed);
+
+        questor.ChangeSprite();
+        prevQuest?.ConditionsIsDone();
+
+        if (type == QuestType.Quest)
+            EventHandler.OnQuestPassed?.Invoke(this);
+    }
+
+    #endregion
+
     #region Passing Quests from other Quest
 
     public virtual void PassingQuestAfterStart(Quest quest) => PassingQuest(quest, passingQuestsAfterStart);
@@ -132,22 +142,6 @@ public abstract class Quest : ScriptableObject
     }
 
     #endregion
-
-    public virtual void PassQuest()
-    {
-        ChangeStage(QuestStages.Passed);
-
-        questor.ChangeSprite();
-        prevQuest?.ConditionsIsDone();
-
-        if (type == QuestType.Quest)
-            EventHandler.OnQuestPassed?.Invoke(this);
-    }
-
-    public virtual int GetRandomIndex(string[] arr)
-    {
-        return UnityEngine.Random.Range(0, arr.Length);
-    }
 
     public void ChangeStage(QuestStages stage)
     {
@@ -174,9 +168,24 @@ public abstract class Quest : ScriptableObject
         }
     }
 
+    public virtual int GetRandomIndex(string[] arr)
+    {
+        return UnityEngine.Random.Range(0, arr.Length);
+    }
+
     private void MakeAvailableQuests(Quest[] quests)
     {
         foreach (var quest in quests)
             quest.ChangeStage(QuestStages.NotStarted);
+    }
+
+    private bool IsMeetsTheRequirements(Quest[] quests, QuestStages requiredStage)
+    {
+        if (quests != null)
+            foreach (var quest in quests)
+                if (quest.stage != requiredStage)
+                    return false;
+
+        return true;
     }
 }
