@@ -13,6 +13,11 @@ public abstract class Quest : ScriptableObject
     [SerializeField] private QuestType type = QuestType.Quest;
     [NonSerialized] public Questor questor;
 
+    [Header("Quest States")]
+    public QuestStages stage;
+    public enum QuestStages
+    { NotAvailable, NotStarted, Progressing, Completed, Passed };
+
     [Header("Base Replicas")]
     [TextArea(2, 4)]
     public string givingReplica;
@@ -20,16 +25,6 @@ public abstract class Quest : ScriptableObject
     public string[] noDoneReplicas;
     [TextArea(2, 4)]
     public string completeReplica;
-
-    [Header("Chain Quests")]
-    [NonSerialized] public Quest prevQuest;
-    public Quest nextQuest;
-    [Tooltip(" весты, завершающие данный квест после их начала")]
-    public Quest[] passQuests_start;
-    [Tooltip(" весты, завершающие данный квест после их выполнени€")]
-    public Quest[] passQuests_complete;
-    [Tooltip(" весты, завершающие данный квест после их завершени€")]
-    public Quest[] passQuests_pass;
 
     [Header("Requirements Quest Launch")]
     [Tooltip("“ребуемый уровень зла в мире (ниже указанного)")]
@@ -49,10 +44,15 @@ public abstract class Quest : ScriptableObject
     [Tooltip("ƒелает доступными эти квесты, после завершени€ этого")]
     public Quest[] availableQuests_pass;
 
-    [Header("Quest States")]
-    public QuestStages stage;
-    public enum QuestStages
-    { NotAvailable, NotStarted, Progressing, Completed, Passed };
+    [Header("Chain Quests")]
+    [NonSerialized] public Quest prevQuest;
+    public Quest nextQuest;
+    [Tooltip(" весты, завершающие данный квест после их начала")]
+    public Quest[] passQuests_start;
+    [Tooltip(" весты, завершающие данный квест после их выполнени€")]
+    public Quest[] passQuests_complete;
+    [Tooltip(" весты, завершающие данный квест после их завершени€")]
+    public Quest[] passQuests_pass;
 
     #endregion
 
