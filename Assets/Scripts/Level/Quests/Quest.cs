@@ -26,6 +26,10 @@ public abstract class Quest : ScriptableObject
     [TextArea(2, 4)]
     public string completeReplica;
 
+    [Header("Chain Quests")]
+    [NonSerialized] public Quest prevQuest;
+    public Quest nextQuest;
+
     [Header("Requirements Quest Launch")]
     [Tooltip("Требуемый уровень зла в мире (ниже указанного)")]
     public int availabilityLevel = 10;
@@ -36,6 +40,14 @@ public abstract class Quest : ScriptableObject
     [Tooltip("Эти квесты должны быть завершены, для того чтобы квест стал доступным")]
     public Quest[] requiredQuests_pass;
 
+    [Header("Change other Quests")]
+    [Tooltip("Квесты, завершающие данный квест после их начала")]
+    public Quest[] passQuests_start;
+    [Tooltip("Квесты, завершающие данный квест после их выполнения")]
+    public Quest[] passQuests_complete;
+    [Tooltip("Квесты, завершающие данный квест после их завершения")]
+    public Quest[] passQuests_pass;
+
     [Header("Make Available after this Quests")]
     [Tooltip("Делает доступными эти квесты, после старта этого")]
     public Quest[] availableQuests_start;
@@ -43,16 +55,6 @@ public abstract class Quest : ScriptableObject
     public Quest[] availableQuests_complete;
     [Tooltip("Делает доступными эти квесты, после завершения этого")]
     public Quest[] availableQuests_pass;
-
-    [Header("Chain Quests")]
-    [NonSerialized] public Quest prevQuest;
-    public Quest nextQuest;
-    [Tooltip("Квесты, завершающие данный квест после их начала")]
-    public Quest[] passQuests_start;
-    [Tooltip("Квесты, завершающие данный квест после их выполнения")]
-    public Quest[] passQuests_complete;
-    [Tooltip("Квесты, завершающие данный квест после их завершения")]
-    public Quest[] passQuests_pass;
 
     #endregion
 
@@ -210,7 +212,7 @@ public abstract class Quest : ScriptableObject
     {
         if (quests != null)
             foreach (var quest in quests)
-                if (quest.stage == requiredStage)
+                if (quest.stage != requiredStage)
                     return false;
 
         return true;
