@@ -4,8 +4,9 @@ using UnityEngine;
 public class EvilLevelCounter : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _evilLevelCounter;
+    [SerializeField] private Transform _balk;
     [SerializeField] private string _textScales;
-    [SerializeField][Range(1, 10)] private int _evilLevel;
+    [SerializeField][Range(0, 10)] private int _evilLevel;
 
     private void Start()
     {
@@ -18,23 +19,34 @@ public class EvilLevelCounter : MonoBehaviour
 
     private void EvilLevelUp()
     {
-        _evilLevel++;
-        
+        if (_evilLevel < 10)
+            _evilLevel++;
+
         EvilLevelChange();
-    }  
-    
+    }
+
     private void EvilLevelDown(Quest quest)
     {
-        _evilLevel--;
+        if (_evilLevel > 0)
+            _evilLevel--;
 
         EvilLevelChange();
     }
 
     private void EvilLevelChange()
     {
+        SetScalesAngle();
+
         _evilLevelCounter.text = $"{_textScales}: {_evilLevel}";
 
         EventHandler.OnEvilLevelChanged.Invoke(_evilLevel);
+    }
+
+    private void SetScalesAngle()
+    {
+        //_balk.Rotate(0, 0, 5 - _evilLevel * 5);
+
+        _balk.transform.rotation = Quaternion.Euler(0, 0, (5 - _evilLevel) * 5);
     }
 
     #region EDITOR_MODE

@@ -2,9 +2,8 @@ using UnityEngine;
 
 public class Item : MonoBehaviour
 {
-    [SerializeField] private bool _isNotTaken;
-
     public string nameItem;
+    private bool _isNotTaken;
 
     public virtual void Awake()
     {

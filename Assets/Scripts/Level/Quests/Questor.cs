@@ -4,9 +4,7 @@ using TMPro;
 using InputData;
 using EditorExtension;
 using UnityEditor;
-using Unity.VisualScripting;
 using System;
-using UnityEditor.VersionControl;
 using System.IO;
 
 public class Questor : MonoBehaviour
@@ -23,8 +21,8 @@ public class Questor : MonoBehaviour
     [SerializeField] private EvilLevelCounter _evilLevelCounter;
 
     [Header("Dialogue")]
-    [SerializeField] private Image _dialogBox;
-    [SerializeField] private TextMeshProUGUI _dialogText;
+    //[SerializeField] private Image _dialogBox;
+    //[SerializeField] private TextMeshProUGUI _dialogText;
     [TextArea(2, 4)]
     [SerializeField] private string _textGreeting = "Приветствую!";
 
@@ -50,16 +48,16 @@ public class Questor : MonoBehaviour
             Dialogue();
     }
 
-    public void DialogBox(string text)
-    {
-        _dialogText.text = text;
-        _dialogBox.gameObject.SetActive(true);
-        _dialogueReady = true;
-    }
+    //public void DialogBox(string text)
+    //{
+    //    _dialogText.text = text;
+    //    _dialogBox.gameObject.SetActive(true);
+    //    _dialogueReady = true;
+    //}
 
     public void Dialogue()
     {
-        _dialogBox.gameObject.SetActive(false);
+        //_dialogBox.gameObject.SetActive(false);
 
         EventHandler.OnGameModeChanged?.Invoke(GameModes.Pause);
         EventHandler.OnDialogueWindowShow?.Invoke(true);
@@ -87,16 +85,13 @@ public class Questor : MonoBehaviour
     private void OnTriggerStay2D(Collider2D collision)
     {
         if (_gameMode == GameModes.Playing && collision.transform.tag == "Player")
-            DialogBox("[F] - поговорить.");
+            _dialogueReady = true;
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (_gameMode == GameModes.Playing && collision.transform.tag == "Player")
-        {
             _dialogueReady = false;
-            _dialogBox.gameObject.SetActive(false);
-        }
     }
 
     #endregion
