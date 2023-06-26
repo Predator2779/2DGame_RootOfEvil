@@ -5,6 +5,9 @@ using InputData;
 using EditorExtension;
 using UnityEditor;
 using Unity.VisualScripting;
+using System;
+using UnityEditor.VersionControl;
+using System.IO;
 
 public class Questor : MonoBehaviour
 {
@@ -47,7 +50,7 @@ public class Questor : MonoBehaviour
             Dialogue();
     }
 
-    public void Say(string text)
+    public void DialogBox(string text)
     {
         _dialogText.text = text;
         _dialogBox.gameObject.SetActive(true);
@@ -84,7 +87,7 @@ public class Questor : MonoBehaviour
     private void OnTriggerStay2D(Collider2D collision)
     {
         if (_gameMode == GameModes.Playing && collision.transform.tag == "Player")
-            Say("[F] - поговорить.");
+            DialogBox("[F] - поговорить.");
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -96,54 +99,83 @@ public class Questor : MonoBehaviour
         }
     }
 
+    #endregion
+
+    #region Save & Load data Methods
+
     [Button("Save Quests")]
-    public void SaveQuests()
+    public void SaveQuests() => Save();
+
+    [Button("Save Quests With Replacement")]
+    public void SaveQuestsWithReplacement() => Save(true);
+
+    [Button("Load Quests")]
+    public void LoadQuests()
     {
         foreach (var quest in _quests)
         {
-            if (quest.GetComponent<ItemQuest>())
-            {
-                SaveItemQuest(quest.GetComponent<ItemQuest>());
-            }
+            string path = $"Assets/Scriptable Objects/Quests/Quests Data/{questorName}";
 
-            if (quest.GetComponent<DialogueQuest>())
+            if (AssetDatabase.Contains(quest))
             {
-                SaveDialogueQuest(quest.GetComponent<DialogueQuest>());
+                path += $"/{quest.questName}_copy.asset";
+
+                CopyFields(AssetDatabase.LoadAssetAtPath(path, quest.GetType()), quest);
             }
         }
     }
 
-    private void SaveItemQuest(ItemQuest quest)
+    private void Save(bool withReplacement = false)
     {
-        var newQuest = ScriptableObject.CreateInstance<ItemQuest>();
-        string path = $"Assets/Scriptable Objects/Quests/QuestsData/{questorName}/{quest.questName}.asset";
+        foreach (var quest in _quests)
+        {
+            string path = $"Assets/Scriptable Objects/Quests/Quests Data/{questorName}";
 
-        CopyObjectFields(quest, newQuest, path);
+            if (!AssetDatabase.IsValidFolder(path))
+                AssetDatabase.CreateFolder(path, questorName);
+
+            string assetName = $"/{quest.questName}_copy.asset";
+
+            // ѕровер€ем существование ассета.
+            if (!withReplacement && File.Exists(path + assetName))
+                throw new Exception($"Asset {assetName} already exists.");
+
+            if (quest is ItemQuest)
+            {
+                var newQuest = ScriptableObject.CreateInstance<ItemQuest>();
+
+                SaveAsset(quest, newQuest, path + assetName);
+            }
+
+            if (quest is DialogueQuest)
+            {
+                var newQuest = ScriptableObject.CreateInstance<DialogueQuest>();
+
+                SaveAsset(quest, newQuest, path + assetName);
+            }
+        }
     }
 
-    private void SaveDialogueQuest(DialogueQuest quest)
+    private void SaveAsset(UnityEngine.Object obj, UnityEngine.Object newObj, string path)
     {
-        var newQuest = ScriptableObject.CreateInstance<DialogueQuest>();
-        string path = $"Assets/Scriptable Objects/Quests/QuestsData/{quest.questName}.asset";
+        // —оздаем ассет.
+        AssetDatabase.CreateAsset(newObj, path);
 
-        CopyObjectFields(quest, newQuest, path);
-    }
+        CopyFields(obj, newObj);
 
-    private void CopyObjectFields(Object obj, Object newObj, string path)
-    {
-        AssetDatabase.CreateAsset(obj, path);
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
-        EditorUtility.FocusProjectWindow();
-        Selection.activeObject = obj;
+    }
 
-        var fields = obj.GetType().GetFields();
-        var newFields = newObj.GetType().GetFields();
+    private void CopyFields(UnityEngine.Object fromObj, UnityEngine.Object toObj)
+    {
+        // Ќаходим все пол€ ассета.
+        var fields = fromObj.GetType().GetFields();
+        var newFields = toObj.GetType().GetFields();
 
         for (int i = 0; i < fields.Length; i++)
-        {
-            newFields[i] = fields[i];
-        }
+            // ”станавливаем дл€ нового ассета newObj в поле newFields[i] значение fields[i] ассета obj.
+            newFields[i].SetValue(toObj, fields[i].GetValue(fromObj));
     }
 
     #endregion

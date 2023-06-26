@@ -69,7 +69,10 @@ public abstract class Quest : ScriptableObject
             return false;
     }
 
-    public virtual void Initialize(Questor questor) => this.questor = questor;
+    public virtual void Initialize(Questor questor)
+    {
+        this.questor = questor;
+    }
 
     public void ChangeStage(QuestStages stage) => this.stage = stage;
 
