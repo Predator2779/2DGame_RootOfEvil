@@ -2,9 +2,6 @@ using UnityEngine.UI;
 using UnityEngine;
 using TMPro;
 using InputData;
-using EditorExtension;
-using UnityEditor;
-using Unity.VisualScripting;
 
 public class Questor : MonoBehaviour
 {
@@ -85,56 +82,6 @@ public class Questor : MonoBehaviour
         {
             _dialogueReady = false;
             _dialogBox.gameObject.SetActive(false);
-        }
-    }
-
-    [Button("Save Quests")]
-    public void SaveQuests()
-    {
-        foreach (var quest in _quests)
-        {
-            if (quest.GetComponent<ItemQuest>())
-            {
-                SaveItemQuest(quest.GetComponent<ItemQuest>());
-            }
-
-            if (quest.GetComponent<DialogueQuest>())
-            {
-                SaveDialogueQuest(quest.GetComponent<DialogueQuest>());
-            }
-        }
-    }
-
-    private void SaveItemQuest(ItemQuest quest)
-    {
-        var newQuest = ScriptableObject.CreateInstance<ItemQuest>();
-        string path = $"Assets/Scriptable Objects/Quests/QuestsData/{questorName}/{quest.questName}.asset";
-
-        CopyObjectFields(quest, newQuest, path);
-    }
-
-    private void SaveDialogueQuest(DialogueQuest quest)
-    {
-        var newQuest = ScriptableObject.CreateInstance<DialogueQuest>();
-        string path = $"Assets/Scriptable Objects/Quests/QuestsData/{quest.questName}.asset";
-
-        CopyObjectFields(quest, newQuest, path);
-    }
-
-    private void CopyObjectFields(Object obj, Object newObj, string path)
-    {
-        AssetDatabase.CreateAsset(obj, path);
-        AssetDatabase.SaveAssets();
-        AssetDatabase.Refresh();
-        EditorUtility.FocusProjectWindow();
-        Selection.activeObject = obj;
-
-        var fields = obj.GetType().GetFields();
-        var newFields = newObj.GetType().GetFields();
-
-        for (int i = 0; i < fields.Length; i++)
-        {
-            newFields[i] = fields[i];
         }
     }
 
