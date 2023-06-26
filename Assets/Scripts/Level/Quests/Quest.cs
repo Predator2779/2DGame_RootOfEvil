@@ -130,7 +130,7 @@ public abstract class Quest : ScriptableObject
 
     public virtual void PassQuest()
     {
-        questor.SetSmileSprite();
+        questor.ChangeSprite();
         prevQuest?.ConditionsIsDone();
 
         if (type == QuestType.Quest)
@@ -169,7 +169,7 @@ public abstract class Quest : ScriptableObject
 
     public virtual void PassingQuest(Quest quest, Quest[] quests)
     {
-        foreach (var passingQuest in quests)
+        foreach (var passingQuest in passQuests_pass)
             if (quest.name == passingQuest.name)
             {
                 PassQuest();
