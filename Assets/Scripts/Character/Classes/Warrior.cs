@@ -9,7 +9,7 @@ public class Warrior : Character
 
     private bool _canAttack = true;
 
-    public override void Use()
+    public override void PickOrPut()
     {
         Attack();
     }

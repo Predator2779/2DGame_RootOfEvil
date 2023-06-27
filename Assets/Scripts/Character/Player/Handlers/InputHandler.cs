@@ -152,7 +152,7 @@ public class InputHandler : MonoBehaviour
     private void UseItem()
     {
         if (InputFunctions.GetLMB_Up())
-            _player.Use();
+            _player.PickOrPut();
     }
 
     private Vector2 GetMovementVector()

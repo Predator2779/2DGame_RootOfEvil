@@ -18,7 +18,7 @@ public class Character : MonoBehaviour
 
     #region Character
 
-    public virtual void Use()
+    public virtual void PickOrPut()
     {
         UseItem(holdedItem, usableObject);
     }

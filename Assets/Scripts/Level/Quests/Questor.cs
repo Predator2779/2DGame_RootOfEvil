@@ -34,6 +34,7 @@ public class Questor : MonoBehaviour
 
     private void Start()
     {
+        EventHandler.OnGameModeChanged.AddListener(ChangeGameMode);
         EventHandler.OnEvilLevelChanged.AddListener(SetSadSprite);
 
         if (_spriteRenderer == null)
@@ -48,17 +49,8 @@ public class Questor : MonoBehaviour
             Dialogue();
     }
 
-    //public void DialogBox(string text)
-    //{
-    //    _dialogText.text = text;
-    //    _dialogBox.gameObject.SetActive(true);
-    //    _dialogueReady = true;
-    //}
-
     public void Dialogue()
     {
-        //_dialogBox.gameObject.SetActive(false);
-
         EventHandler.OnGameModeChanged?.Invoke(GameModes.Pause);
         EventHandler.OnDialogueWindowShow?.Invoke(true);
         EventHandler.OnShowQuests?.Invoke
