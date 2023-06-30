@@ -10,10 +10,7 @@ public class Character : MonoBehaviour
 
     private Rigidbody2D _rbody;
 
-    private void Awake()
-    {
-        _rbody = GetComponent<Rigidbody2D>();
-    }
+    private void Awake() => _rbody = GetComponent<Rigidbody2D>();
 
     #region Character
 
@@ -56,15 +53,9 @@ public class Character : MonoBehaviour
 
     #region Common
 
-    private void ExecuteCommand(Command command)
-    {
-        command.Execute();
-    }
+    private void ExecuteCommand(Command command) => command.Execute();
 
-    private void ExecuteCommandByValue(Command command, float value)
-    {
-        command.ExecuteByValue(value);
-    }
+    private void ExecuteCommandByValue(Command command, float value) => command.ExecuteByValue(value);
 
     #endregion
 }

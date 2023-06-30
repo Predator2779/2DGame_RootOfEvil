@@ -6,7 +6,7 @@ public class UsedItem : Item
     [Tooltip("Одноразовые предметы исчезают после использования")]
     public bool _oneUse = false;
 
-    [SerializeField] private List<UsedItem> usedItems;
+    private List<UsedItem> usedItems;
 
     public virtual void PrimaryAction()
     {

@@ -13,7 +13,7 @@ public class Warrior : Character
     {
         if (!_canAttack) return;
 
-        if (holdedItem.TryGetComponent(out Weapon weapon))
+        if (holdedItem != null && holdedItem.TryGetComponent(out Weapon weapon))
             MultiplyDamage(weapon);
 
         StartCoroutine(CanAttack());
@@ -21,12 +21,7 @@ public class Warrior : Character
         base.UsePrimaryAction();
     }
 
-    private Weapon MultiplyDamage(Weapon weapon)
-    {
-        weapon.DamageFactor = attackDamage;
-
-        return weapon;
-    }
+    private void MultiplyDamage(Weapon weapon) => weapon.DamageFactor = attackDamage;
 
     private IEnumerator CanAttack()
     {

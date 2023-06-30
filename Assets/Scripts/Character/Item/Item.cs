@@ -3,30 +3,30 @@ using UnityEngine;
 public class Item : MonoBehaviour
 {
     public string nameItem;
-    private bool _isNotTaken;
+    public bool isNotTaken;
 
     public virtual void Start()
     {
-        _isNotTaken = true;
+        isNotTaken = true;
     }
 
     public void PickUp(Transform parent)
     {
-        if (_isNotTaken)
+        if (isNotTaken)
         {
             transform.SetParent(parent.transform);
 
-            _isNotTaken = false;
+            isNotTaken = false;
         }
     }
 
     public void Put()
     {
-        if (!_isNotTaken)
+        if (!isNotTaken)
         {
             transform.SetParent(null);
 
-            _isNotTaken = true;
+            isNotTaken = true;
         }
     }
 }

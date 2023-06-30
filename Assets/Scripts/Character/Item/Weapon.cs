@@ -4,7 +4,7 @@ using UnityEngine;
 public class Weapon : UsedItem
 {
     [SerializeField] private int _weaponDamage;
-    [SerializeField] private List<HealthProcessor> _healthProcessors;
+    [SerializeField] protected List<HealthProcessor> _healthProcessors;
 
     private int _damageFactor;
     public int DamageFactor { set { _damageFactor = value; } }
