@@ -5,7 +5,7 @@ public class Item : MonoBehaviour
     public string nameItem;
     private bool _isNotTaken;
 
-    public virtual void Awake()
+    public virtual void Start()
     {
         _isNotTaken = true;
     }

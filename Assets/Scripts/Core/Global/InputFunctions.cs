@@ -43,6 +43,11 @@ namespace InputData
         static public bool GetLMB_Up()
         {
             return Input.GetMouseButtonUp(0);
+        }  
+        
+        static public bool GetRMB_Up()
+        {
+            return Input.GetMouseButtonUp(1);
         }
 
         static public bool GetRMB_Down()

@@ -12,7 +12,7 @@ public class HealthProcessor : MonoBehaviour, IHealth, IUsable
 
     private void OnEnable()
     {
-        Initialize();
+        _health = new Health(_maxHitPoints, _coefDefense);
     }
 
     private void Update()
@@ -21,17 +21,12 @@ public class HealthProcessor : MonoBehaviour, IHealth, IUsable
         _healthBar.SetCurrentHealth(_currentHitPoints * 100 / _maxHitPoints);
     }
 
-    private void Initialize()
-    {
-        _health = new Health(_maxHitPoints, _coefDefense);
-    }
-
     public void ResponseAction(UsedItem item)
     {
         CheckItem(item);
     }
 
-    public bool CheckItem(Item item)
+    private bool CheckItem(Item item)
     {
         if (item.TryGetComponent(out Weapon weapon))
         {
@@ -42,7 +37,7 @@ public class HealthProcessor : MonoBehaviour, IHealth, IUsable
 
         if (item.TryGetComponent(out Healer healer))
         {
-            TakeHeal(healer.healPoints);
+            TakeHeal(healer.HealPoints);
 
             return true;
         }
@@ -67,9 +62,7 @@ public class HealthProcessor : MonoBehaviour, IHealth, IUsable
     public void ChangeHealthBar()
     {
         if (_healthBar != null)
-        {
             _healthBar.SetCurrentHealth(_currentHitPoints);
-        }
     }
 
     public int GetCurrentHitPoints()
@@ -77,24 +70,22 @@ public class HealthProcessor : MonoBehaviour, IHealth, IUsable
         return _health.GetCurrentHitPoints();
     }
 
-    #region NotImplemented
+    #region Not Implemented
+
+    public void PrimaryAction(IUsable usable)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public void SecondaryAction()
+    {
+        throw new System.NotImplementedException();
+    }
 
     public void PassiveAction()
     {
         throw new System.NotImplementedException();
     }
-
-    public void SecondaryAction(IUsable usable)
-    {
-        throw new System.NotImplementedException();
-    }
-
-    public void PrimaryAction()
-    {
-        throw new System.NotImplementedException();
-
-
-        #endregion
-
-    }
+        
+    #endregion
 }

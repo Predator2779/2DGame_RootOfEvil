@@ -9,25 +9,16 @@ public class Warrior : Character
 
     private bool _canAttack = true;
 
-    public override void PickOrPut()
-    {
-        Attack();
-    }
-
-    public void Attack()
+    public override void UsePrimaryAction()
     {
         if (!_canAttack) return;
 
-        Item item = holdedItem;
-
-        if (CheckUsing(item, usableObject) && item.TryGetComponent(out Weapon weapon))
-        {
-            item = MultiplyDamage(weapon);
-        }
-
-        UseItem(item, usableObject);
+        if (holdedItem.TryGetComponent(out Weapon weapon))
+            MultiplyDamage(weapon);
 
         StartCoroutine(CanAttack());
+
+        base.UsePrimaryAction();
     }
 
     private Weapon MultiplyDamage(Weapon weapon)

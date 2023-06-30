@@ -1,6 +1,5 @@
 using UnityEngine.UI;
 using UnityEngine;
-using TMPro;
 using InputData;
 using EditorExtension;
 using UnityEditor;
@@ -21,8 +20,6 @@ public class Questor : MonoBehaviour
     [SerializeField] private EvilLevelCounter _evilLevelCounter;
 
     [Header("Dialogue")]
-    //[SerializeField] private Image _dialogBox;
-    //[SerializeField] private TextMeshProUGUI _dialogText;
     [TextArea(2, 4)]
     [SerializeField] private string _textGreeting = "Приветствую!";
 

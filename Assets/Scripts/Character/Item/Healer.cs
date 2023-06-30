@@ -1,9 +1,27 @@
+using UnityEngine;
+
 public class Healer : UsedItem
 {
-    public int healPoints;
+    [SerializeField] private int _healPoints;
 
-    public override void Use(IUsable usable)
+    [SerializeField] private IUsable _usable;
+
+    public int HealPoints { get { return _healPoints; } }
+
+    public override void SecondaryAction()
     {
-        base.Use(usable);
+        if (_usable != null)
+            _usable.ResponseAction(this);
+    }
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.TryGetComponent(out IUsable usable))
+            _usable = usable;
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.TryGetComponent(out IUsable usable) && usable == _usable)
+            _usable = null;
     }
 }

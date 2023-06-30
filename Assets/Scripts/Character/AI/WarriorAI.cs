@@ -7,10 +7,7 @@ public class WarriorAI : CharacterAI
 
     protected Warrior _warrior;
 
-    protected override void Awake()
-    {
-        _warrior = GetComponent<Warrior>();
-    }
+    protected override void Awake() => _warrior = GetComponent<Warrior>();
 
     protected override void Update()
     {
@@ -24,23 +21,19 @@ public class WarriorAI : CharacterAI
         if (_enemy != null && _enemy.TryGetComponent(out IUsable usable))
         {
             _warrior.usableObject = usable;
-            _warrior.Attack();
+            _warrior.UsePrimaryAction();
         }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.tag == "Player")
-        {
             _enemy = collision.transform;
-        }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.tag == "Player")
-        {
             _enemy = null;
-        }
     }
 }

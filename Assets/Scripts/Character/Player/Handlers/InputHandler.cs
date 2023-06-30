@@ -36,9 +36,10 @@ public class InputHandler : MonoBehaviour
         {
             SetAxes();
 
-            ItemInteraction();
+            ItemPickOrPut();
 
-            UseItem();
+            UseItem_Primary();
+            UseItem_Secondary();
 
             playerAnim.SetFloat("SpeedHorizontal", Mathf.Abs(GetMovementVector().x));
             playerAnim.SetFloat("SpeedUp", GetMovementVector().y);
@@ -76,13 +77,9 @@ public class InputHandler : MonoBehaviour
     private bool IsPlayerMoving()
     {
         if (_verticalAxis != 0 || _horizontalAxis != 0)
-        {
             return true;
-        }
         else
-        {
             return false;
-        }
     }
 
     #endregion
@@ -96,10 +93,7 @@ public class InputHandler : MonoBehaviour
         SetPlayerSide(GetLastPlayerSide());
     }
 
-    private void PutItem()
-    {
-        _itemHandler.PutItem();
-    }
+    private void PutItem() => _itemHandler.PutItem();
 
     #endregion
 
@@ -110,21 +104,16 @@ public class InputHandler : MonoBehaviour
     private void PlayerSideChanger()
     {
         if (_verticalAxis < 0)
-        {
             SetPlayerSide(TurnHandler.playerSides.Front);
-        }
+
         if (_verticalAxis > 0)
-        {
             SetPlayerSide(TurnHandler.playerSides.Back);
-        }
+
         if (_horizontalAxis < 0)
-        {
             SetPlayerSide(TurnHandler.playerSides.Left);
-        }
+
         if (_horizontalAxis > 0)
-        {
             SetPlayerSide(TurnHandler.playerSides.Right);
-        }
     }
 
     private void SetPlayerSide(TurnHandler.playerSides side) => _turnHandler.SetPlayerSide(side);
@@ -139,7 +128,7 @@ public class InputHandler : MonoBehaviour
         _horizontalAxis = InputFunctions.GetHorizontalAxis();
     }
 
-    private void ItemInteraction()
+    private void ItemPickOrPut()
     {
         if (InputFunctions.GetKeyE_Up())
         {
@@ -149,10 +138,16 @@ public class InputHandler : MonoBehaviour
         }
     }
 
-    private void UseItem()
+    private void UseItem_Primary()
     {
         if (InputFunctions.GetLMB_Up())
-            _player.PickOrPut();
+            _player.UsePrimaryAction();
+    } 
+    
+    private void UseItem_Secondary()
+    {
+        if (InputFunctions.GetRMB_Up())
+            _player.UseSecondaryAction();
     }
 
     private Vector2 GetMovementVector()

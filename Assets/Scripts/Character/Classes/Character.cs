@@ -1,5 +1,6 @@
 using UnityEngine;
 using GlobalVariables;
+using static UnityEditor.Progress;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class Character : MonoBehaviour
@@ -18,28 +19,23 @@ public class Character : MonoBehaviour
 
     #region Character
 
-    public virtual void PickOrPut()
+    public virtual void UsePrimaryAction()
     {
-        UseItem(holdedItem, usableObject);
+        if (
+            holdedItem != null &&
+            usableObject != null &&
+            holdedItem.TryGetComponent(out UsedItem usedItem)
+            )
+            usedItem.PrimaryAction(usableObject);
     }
 
-    public void UseItem(Item item, IUsable usableObject)
+    public void UseSecondaryAction()
     {
-        if (CheckUsing(item, usableObject) && item.TryGetComponent(out UsedItem usedItem))
-        {
-            usedItem.Use(usableObject);
-        }
-    }
-    public bool CheckUsing(Item item, IUsable usableObject)
-    {
-        if (item != null && usableObject != null)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        if (
+            holdedItem != null &&
+            holdedItem.TryGetComponent(out UsedItem usedItem)
+            )
+            usedItem.SecondaryAction();
     }
 
     public void MoveTo(Vector2 movementDirection)

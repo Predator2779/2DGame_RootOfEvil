@@ -70,12 +70,12 @@ public class QuestAction : MonoBehaviour, IUsable
 
     #region NotImplemented
 
-    public void PrimaryAction()
+    public void SecondaryAction()
     {
         throw new System.NotImplementedException();
     }
 
-    public void SecondaryAction(IUsable usable)
+    public void PrimaryAction(IUsable usable)
     {
         throw new System.NotImplementedException();
     }
