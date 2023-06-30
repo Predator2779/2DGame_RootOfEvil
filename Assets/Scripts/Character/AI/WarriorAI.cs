@@ -18,9 +18,8 @@ public class WarriorAI : CharacterAI
 
     private void CheckEnemy()
     {
-        if (_enemy != null && _enemy.TryGetComponent(out IUsable usable))
+        if (_enemy != null && _enemy.TryGetComponent(out HealthProcessor healthProcessor))
         {
-            _warrior.usableObject = usable;
             _warrior.UsePrimaryAction();
         }
     }

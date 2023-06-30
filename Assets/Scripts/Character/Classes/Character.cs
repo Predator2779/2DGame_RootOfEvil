@@ -1,6 +1,5 @@
 using UnityEngine;
 using GlobalVariables;
-using static UnityEditor.Progress;
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class Character : MonoBehaviour
@@ -8,7 +7,6 @@ public class Character : MonoBehaviour
     [SerializeField][Range(0, 10)] private int _movementSpeed;
 
     public Item holdedItem;
-    public IUsable usableObject;
 
     private Rigidbody2D _rbody;
 
@@ -23,10 +21,9 @@ public class Character : MonoBehaviour
     {
         if (
             holdedItem != null &&
-            usableObject != null &&
             holdedItem.TryGetComponent(out UsedItem usedItem)
             )
-            usedItem.PrimaryAction(usableObject);
+            usedItem.PrimaryAction();//
     }
 
     public void UseSecondaryAction()

@@ -7,7 +7,6 @@ public class ItemHandler : MonoBehaviour
 
     private Item selectedItem;
     private Item holdedItem;
-    private IUsable usableObject;
     private int _oldItemSortingOrder;
 
     public Item HoldedItem { get => holdedItem; }
@@ -41,23 +40,15 @@ public class ItemHandler : MonoBehaviour
 
     private void SetCharacterItem(Item item) => _character.holdedItem = item;
 
-    private void SetCharacterUsableObject(IUsable usable) => _character.usableObject = usable;
-
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.TryGetComponent(out Item item))
             selectedItem = item;
-
-        if (collision.TryGetComponent(out IUsable usable))
-            SetCharacterUsableObject(usable);
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.TryGetComponent(out Item item) && item == selectedItem)
             selectedItem = null;
-
-        if (collision.TryGetComponent(out IUsable usable) && usable == usableObject)
-            SetCharacterUsableObject(null);
     }
 }

@@ -1,16 +1,44 @@
+using System.Collections.Generic;
 using UnityEngine;
 
-public class UsedItem : Item, IUsable
+public class UsedItem : Item
 {
     [Tooltip("Одноразовые предметы исчезают после использования")]
     public bool _oneUse = false;
 
-    public virtual void PrimaryAction(IUsable usable)
+    [SerializeField] private List<UsedItem> usedItems;
+
+    public virtual void PrimaryAction()
     {
-        usable.ResponseAction(this);
+        foreach (UsedItem item in usedItems)
+            item.ResponseAction(this);
 
         if (_oneUse)
             Destroy(gameObject);
+    }
+
+    public virtual void AddToList(Collider2D collision)
+    {
+        if (collision.TryGetComponent(out UsedItem usedItem))
+            if (!usedItems.Contains(usedItem))
+                usedItems.Add(usedItem);
+    }
+
+    public virtual void RemoveFromList(Collider2D collision)
+    {
+        if (collision.TryGetComponent(out UsedItem usedItem))
+            if (usedItems.Contains(usedItem))
+                usedItems.Remove(usedItem);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        AddToList(collision);
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        RemoveFromList(collision);
     }
 
     #region Not Implemented

@@ -1,27 +1,17 @@
+using System.Collections.Generic;
 using UnityEngine;
 
-public class Healer : UsedItem
+public class Healer : Weapon
 {
     [SerializeField] private int _healPoints;
+    [SerializeField] private List<HealthProcessor> _healthProcessors;
 
-    [SerializeField] private IUsable _usable;
-
-    public int HealPoints { get { return _healPoints; } }
-
-    public override void SecondaryAction()
+    public override void PrimaryAction()
     {
-        if (_usable != null)
-            _usable.ResponseAction(this);
-    }
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.TryGetComponent(out IUsable usable))
-            _usable = usable;
-    }
+        foreach (HealthProcessor healthProcessor in _healthProcessors)
+            healthProcessor.TakeHeal(_healPoints);
 
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.TryGetComponent(out IUsable usable) && usable == _usable)
-            _usable = null;
+        if (_oneUse)
+            Destroy(gameObject);
     }
 }
