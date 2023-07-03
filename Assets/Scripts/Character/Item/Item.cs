@@ -3,12 +3,7 @@ using UnityEngine;
 public class Item : MonoBehaviour
 {
     public string nameItem;
-    public bool isNotTaken;
-
-    public virtual void Start()
-    {
-        isNotTaken = true;
-    }
+    public bool isNotTaken = true;
 
     public void PickUp(Transform parent)
     {

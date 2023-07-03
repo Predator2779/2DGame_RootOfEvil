@@ -1,19 +1,21 @@
 using Core.Health;
+using System.Collections;
 using UnityEngine;
 
 public class HealthProcessor : MonoBehaviour, IHealth
 {
+    [SerializeField] private SpriteRenderer _spriteRenderer;
     [SerializeField] private HealthBar _healthBar;
     [SerializeField] private int _maxHitPoints;
     [SerializeField] private int _currentHitPoints;
     [SerializeField] [Min(1)] private float _coefDefense;
+    [SerializeField] private float _timeOfColor = 0.01f; // добавить в глобал файл.
+    [SerializeField] private Color _healColor;
+    [SerializeField] private Color _damageColor;
 
     private Health _health;
 
-    private void OnEnable()
-    {
-        _health = new Health(_maxHitPoints, _coefDefense);
-    }
+    private void OnEnable() => _health = new Health(_maxHitPoints, _coefDefense);
 
     private void Update()
     {
@@ -26,6 +28,8 @@ public class HealthProcessor : MonoBehaviour, IHealth
         _health.TakeDamage(damage);
 
         ChangeHealthBar();
+
+        StartCoroutine(BackColor(_damageColor));
     }
 
     public void TakeHeal(float heal)
@@ -33,6 +37,8 @@ public class HealthProcessor : MonoBehaviour, IHealth
         _health.TakeHeal(heal);
 
         ChangeHealthBar();
+
+        StartCoroutine(BackColor(_healColor));
     }
 
     public void ChangeHealthBar()
@@ -41,8 +47,20 @@ public class HealthProcessor : MonoBehaviour, IHealth
             _healthBar.SetCurrentHealth(_currentHitPoints);
     }
 
-    public int GetCurrentHitPoints()
+    public int GetCurrentHitPoints() { return _health.GetCurrentHitPoints(); }
+
+    private void SetColor(Color color) => _spriteRenderer.color = color;
+
+    private IEnumerator BackColor(Color32 color)
     {
-        return _health.GetCurrentHitPoints();
+        var oldColor = _spriteRenderer.color;
+
+        //Color f = Color.HSVToRGB(117, 220, 225);
+
+        SetColor(color);
+
+        yield return new WaitForSeconds(_timeOfColor);
+
+        SetColor(oldColor);
     }
 }

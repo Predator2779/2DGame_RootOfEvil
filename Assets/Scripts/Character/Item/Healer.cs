@@ -6,8 +6,14 @@ public class Healer : Weapon
 
     public override void PrimaryAction()
     {
-        foreach (HealthProcessor healthProcessor in _healthProcessors)
+        if (
+            transform.parent != null &&
+            transform.parent.transform.TryGetComponent(out HealthProcessor healthProcessor)
+            )
             healthProcessor.TakeHeal(_healPoints);
+
+        foreach (HealthProcessor hProcessor in _healthProcessors)
+            hProcessor.TakeHeal(_healPoints);
 
         if (_oneUse)
             Destroy(gameObject);
