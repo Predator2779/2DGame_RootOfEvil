@@ -20,7 +20,7 @@ public class Character : MonoBehaviour
             holdedItem != null &&
             holdedItem.TryGetComponent(out UsedItem usedItem)
             )
-            usedItem.PrimaryAction();//
+            usedItem.PrimaryAction();
     }
 
     public void UseSecondaryAction()

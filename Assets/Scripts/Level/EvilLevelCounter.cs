@@ -1,9 +1,11 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.Rendering.PostProcessing;
 
 public class EvilLevelCounter : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _evilLevelCounter;
+    [SerializeField] private PostProcessVolume _postProcessingVol;
     [SerializeField] private Transform _balk;
     [SerializeField] private string _textScales;
     [SerializeField][Range(0, 10)] private int _evilLevel;
@@ -44,8 +46,7 @@ public class EvilLevelCounter : MonoBehaviour
 
     private void SetScalesAngle()
     {
-        //_balk.Rotate(0, 0, 5 - _evilLevel * 5);
-
+        _postProcessingVol.weight = (float)_evilLevel / 10;
         _balk.transform.rotation = Quaternion.Euler(0, 0, (5 - _evilLevel) * 5);
     }
 

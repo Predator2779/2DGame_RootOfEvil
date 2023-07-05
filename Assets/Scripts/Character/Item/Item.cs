@@ -2,8 +2,10 @@ using UnityEngine;
 
 public class Item : MonoBehaviour
 {
+    private bool _isNotTaken = true;
+
+    public bool isNotTaken { get { return _isNotTaken; }  set { _isNotTaken = value; } }
     public string nameItem;
-    public bool isNotTaken = true;
 
     public void PickUp(Transform parent)
     {

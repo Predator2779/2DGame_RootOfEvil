@@ -1,6 +1,7 @@
 using Core.Health;
 using System.Collections;
 using UnityEngine;
+using GlobalVariables;
 
 public class HealthProcessor : MonoBehaviour, IHealth
 {
@@ -9,9 +10,6 @@ public class HealthProcessor : MonoBehaviour, IHealth
     [SerializeField] private int _maxHitPoints;
     [SerializeField] private int _currentHitPoints;
     [SerializeField] [Min(1)] private float _coefDefense;
-    [SerializeField] private float _timeOfColor = 0.01f; // добавить в глобал файл.
-    [SerializeField] private Color _healColor;
-    [SerializeField] private Color _damageColor;
 
     private Health _health;
 
@@ -29,7 +27,7 @@ public class HealthProcessor : MonoBehaviour, IHealth
 
         ChangeHealthBar();
 
-        StartCoroutine(BackColor(_damageColor));
+        StartCoroutine(BackColor(GlobalConstants.DamageColor));
     }
 
     public void TakeHeal(float heal)
@@ -38,7 +36,7 @@ public class HealthProcessor : MonoBehaviour, IHealth
 
         ChangeHealthBar();
 
-        StartCoroutine(BackColor(_healColor));
+        StartCoroutine(BackColor(GlobalConstants.HealColor));
     }
 
     public void ChangeHealthBar()
@@ -51,15 +49,13 @@ public class HealthProcessor : MonoBehaviour, IHealth
 
     private void SetColor(Color color) => _spriteRenderer.color = color;
 
-    private IEnumerator BackColor(Color32 color)
+    private IEnumerator BackColor(Color color)
     {
         var oldColor = _spriteRenderer.color;
 
-        //Color f = Color.HSVToRGB(117, 220, 225);
-
         SetColor(color);
 
-        yield return new WaitForSeconds(_timeOfColor);
+        yield return new WaitForSeconds(GlobalConstants.TimeChangeColor);
 
         SetColor(oldColor);
     }

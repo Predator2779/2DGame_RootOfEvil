@@ -33,7 +33,8 @@ namespace GlobalVariables
         public const float CoefMouseSensitivityX = 2f;
         public const float CoefMouseSensitivityY = 0.3f;
         public const float MinRangeDamage = 0.65f;
-        public const float MaxRangeDamage = 2.01f;
+        public const float MaxRangeDamage = 2.01f; 
+        public const float TimeChangeColor = 0.1f;
 
         #endregion
 
@@ -47,6 +48,13 @@ namespace GlobalVariables
         public static Vector2 PlayerTriggerPosBack = new Vector2(0, 3f);
         public static Vector2 PlayerTriggerPosLeft = new Vector2(-3f, 0f);
         public static Vector2 PlayerTriggerPosRight = new Vector2(3f, 0);
+
+        #endregion
+
+        #region Colors
+
+        public static Color HealColor = new Color(0.459f, 1.000f, 1.000f, 1.000f);
+        public static Color DamageColor = new Color(1.000f, 0.459f, 0.459f, 1.000f);
 
         #endregion
     }
