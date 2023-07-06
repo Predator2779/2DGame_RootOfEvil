@@ -14,8 +14,10 @@ public class SceneTransition : MonoBehaviour
     private void Update()
     {
         if (_isReady && InputData.InputFunctions.GetKeyF_Up())
-            SceneManager.LoadScene(_transitionScene);
+            LoadScene(_transitionScene);
     }
+
+    public static void LoadScene(string sceneName) => SceneManager.LoadScene(sceneName);
 
     private void ChangeGameMode(GameModes mode) => _gameMode = mode;
 
@@ -28,8 +30,8 @@ public class SceneTransition : MonoBehaviour
             collision.transform.tag == "Player"
             )
             _isReady = true;
-    } 
-    
+    }
+
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (

@@ -24,36 +24,21 @@ public partial class Health : IHealth
 
     #endregion
 
-    public void TakeDamage(float damage)
-    {
-        ApplyValue(-damage / _coefDefense);
-    }
+    public void TakeDamage(float damage) => ApplyValue(-damage / _coefDefense);
 
-    public void TakeHeal(float heal)
-    {
-        ApplyValue(heal);
-    }
+    public void TakeHeal(float heal) => ApplyValue(heal);
 
-    public int GetCurrentHitPoints()
-    {
-        return _hitPoints;
-    }
+    public int GetCurrentHitPoints() { return _hitPoints; }
 
     private void ApplyValue(float value)
     {
         float hitPoints = _hitPoints + value;
 
-        if (hitPoints > _maxHitPoints)
-        {
+        if (hitPoints > _maxHitPoints) 
             _hitPoints = _maxHitPoints;
-        }
-        else if (hitPoints < _minHitPoints)
-        {
+        else if (hitPoints < _minHitPoints) 
             _hitPoints = _minHitPoints;
-        }
-        else
-        {
+        else 
             _hitPoints += (int)value;
-        }
     }
 }

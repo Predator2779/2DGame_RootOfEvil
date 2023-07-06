@@ -57,5 +57,11 @@ namespace GlobalVariables
         public static Color DamageColor = new Color(1.000f, 0.459f, 0.459f, 1.000f);
 
         #endregion
+
+        #region Scenes
+
+        public const string AfterDeathScene = "Tavern_Inside";
+
+        #endregion
     }
 }

@@ -5,15 +5,26 @@ using GlobalVariables;
 
 public class HealthProcessor : MonoBehaviour, IHealth
 {
+    [Header("Required Components")]
     [SerializeField] private SpriteRenderer _spriteRenderer;
     [SerializeField] private HealthBar _healthBar;
+
+    [Header("Parameters")]
     [SerializeField] private int _maxHitPoints;
     [SerializeField] private int _currentHitPoints;
     [SerializeField] [Min(1)] private float _coefDefense;
 
+    #region Private Vars
+
     private Health _health;
 
-    private void OnEnable() => _health = new Health(_maxHitPoints, _coefDefense);
+    #endregion
+
+    private void OnEnable()
+    {
+        CheckPlayer();
+        _health = new Health(_maxHitPoints, _coefDefense);
+    }
 
     private void Update()
     {
@@ -28,6 +39,8 @@ public class HealthProcessor : MonoBehaviour, IHealth
         ChangeHealthBar();
 
         StartCoroutine(BackColor(GlobalConstants.DamageColor));
+
+        CheckDeath();
     }
 
     public void TakeHeal(float heal)
@@ -37,6 +50,8 @@ public class HealthProcessor : MonoBehaviour, IHealth
         ChangeHealthBar();
 
         StartCoroutine(BackColor(GlobalConstants.HealColor));
+
+        CheckDeath();
     }
 
     public void ChangeHealthBar()
@@ -49,7 +64,7 @@ public class HealthProcessor : MonoBehaviour, IHealth
 
     private void SetColor(Color color) => _spriteRenderer.color = color;
 
-    private IEnumerator BackColor(Color color)
+    private IEnumerator BackColor(Color color)//
     {
         var oldColor = _spriteRenderer.color;
 
@@ -58,5 +73,16 @@ public class HealthProcessor : MonoBehaviour, IHealth
         yield return new WaitForSeconds(GlobalConstants.TimeChangeColor);
 
         SetColor(oldColor);
+    }
+
+    private bool CheckPlayer() { return transform.tag == "Player" ? true : false; }
+
+    private void CheckDeath()
+    {
+        if (GetCurrentHitPoints() <= 0)
+            if (CheckPlayer())
+                SceneTransition.LoadScene(GlobalConstants.AfterDeathScene);
+            else
+                gameObject.SetActive(false);
     }
 }
