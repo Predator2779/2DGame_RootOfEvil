@@ -31,7 +31,7 @@ public class UsedItem : Item
                 usedItems.Remove(usedItem);
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerStay2D(Collider2D collision)
     {
         AddToList(collision);
     }

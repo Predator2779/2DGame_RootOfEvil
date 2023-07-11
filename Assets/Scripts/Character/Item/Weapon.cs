@@ -20,15 +20,15 @@ public class Weapon : UsedItem
 
     public override void AddToList(Collider2D collision)
     {
-        if (collision.TryGetComponent(out HealthProcessor healthProcessors))
-            if (!_healthProcessors.Contains(healthProcessors))
-                _healthProcessors.Add(healthProcessors);
+        if (collision.TryGetComponent(out HealthProcessor healthProcessor) && healthProcessor.enabled)
+            if (!_healthProcessors.Contains(healthProcessor))
+                _healthProcessors.Add(healthProcessor);
     }
 
     public override void RemoveFromList(Collider2D collision)
     {
-        if (collision.TryGetComponent(out HealthProcessor healthProcessors))
-            if (_healthProcessors.Contains(healthProcessors))
-                _healthProcessors.Remove(healthProcessors);
+        if (collision.TryGetComponent(out HealthProcessor healthProcessor))
+            if (_healthProcessors.Contains(healthProcessor))
+                _healthProcessors.Remove(healthProcessor);
     }
 }
